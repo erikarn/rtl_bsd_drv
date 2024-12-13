@@ -118,6 +118,8 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "opt_inet.h"
 #include "opt_inet6.h"
 
+#include "if_re_eeprom.h"
+
 #define EE_SET(x)					\
 	CSR_WRITE_1(sc, RE_EECMD,			\
 		CSR_READ_1(sc, RE_EECMD) | x)
@@ -269,11 +271,6 @@ static void re_ifmedia_sts			__P((struct ifnet *, struct ifmediareq *));
 static int  re_ifmedia_upd_8125			__P((struct ifnet *));
 static void re_ifmedia_sts_8125			__P((struct ifnet *, struct ifmediareq *));
 
-static void re_eeprom_ShiftOutBits		__P((struct re_softc *, int, int));
-//static u_int16_t re_eeprom_ShiftInBits		__P((struct re_softc *));
-//static void re_eeprom_EEpromCleanup		__P((struct re_softc *));
-//static void re_eeprom_getword			__P((struct re_softc *, int, u_int16_t *));
-static void re_read_eeprom			__P((struct re_softc *, caddr_t, int, int, int));
 static void re_int_task_poll		(void *, int);
 static void re_int_task				(void *, int);
 static void re_int_task_8125_poll	(void *, int);
@@ -38419,167 +38416,4 @@ void re_driver_stop(struct re_softc *sc)
         re_notify_dash_oob(sc, OOB_CMD_DRIVER_STOP);
 
         re_wait_dash_fw_ready(sc);
-}
-
-/*----------------------------------------------------------------------------*/
-/*	8139 (CR9346) 9346 command register bits (offset 0x50, 1 byte)*/
-/*----------------------------------------------------------------------------*/
-#define CR9346_EEDO				0x01			/* 9346 data out*/
-#define CR9346_EEDI				0x02			/* 9346 data in*/
-#define CR9346_EESK				0x04			/* 9346 serial clock*/
-#define CR9346_EECS				0x08			/* 9346 chip select*/
-#define CR9346_EEM0				0x40			/* select 8139 operating mode*/
-#define CR9346_EEM1				0x80			/* 00: normal*/
-#define CR9346_CFGRW			0xC0			/* Config register write*/
-#define CR9346_NORM			0x00
-
-/*----------------------------------------------------------------------------*/
-/*	EEPROM bit definitions(EEPROM control register bits)*/
-/*----------------------------------------------------------------------------*/
-#define EN_TRNF					0x10			/* Enable turnoff*/
-#define EEDO						CR9346_EEDO	/* EEPROM data out*/
-#define EEDI						CR9346_EEDI		/* EEPROM data in (set for writing data)*/
-#define EECS						CR9346_EECS		/* EEPROM chip select (1=high, 0=low)*/
-#define EESK						CR9346_EESK		/* EEPROM shift clock (1=high, 0=low)*/
-
-/*----------------------------------------------------------------------------*/
-/*	EEPROM opcodes*/
-/*----------------------------------------------------------------------------*/
-#define EEPROM_READ_OPCODE	06
-#define EEPROM_WRITE_OPCODE	05
-#define EEPROM_ERASE_OPCODE	07
-#define EEPROM_EWEN_OPCODE	19				/* Erase/write enable*/
-#define EEPROM_EWDS_OPCODE	16				/* Erase/write disable*/
-
-#define	CLOCK_RATE				50				/* us*/
-
-#define RaiseClock(_sc,_x)				\
-	(_x) = (_x) | EESK;					\
-	CSR_WRITE_1((_sc), RE_EECMD, (_x));	\
-	DELAY(CLOCK_RATE);
-
-#define LowerClock(_sc,_x)				\
-	(_x) = (_x) & ~EESK;					\
-	CSR_WRITE_1((_sc), RE_EECMD, (_x));	\
-	DELAY(CLOCK_RATE);
-
-/*
- * Shift out bit(s) to the EEPROM.
- */
-static void re_eeprom_ShiftOutBits(struct re_softc *sc, int data, int count)
-{
-        u_int16_t x, mask;
-
-        mask = 0x01 << (count - 1);
-        x = CSR_READ_1(sc, RE_EECMD);
-
-        x &= ~(EEDO | EEDI);
-
-        do {
-                x &= ~EEDI;
-                if (data & mask)
-                        x |= EEDI;
-
-                CSR_WRITE_1(sc, RE_EECMD, x);
-                DELAY(CLOCK_RATE);
-                RaiseClock(sc,x);
-                LowerClock(sc,x);
-                mask = mask >> 1;
-        } while (mask);
-
-        x &= ~EEDI;
-        CSR_WRITE_1(sc, RE_EECMD, x);
-}
-
-/*
- * Shift in bit(s) from the EEPROM.
- */
-static u_int16_t re_eeprom_ShiftInBits(struct re_softc *sc)
-{
-        u_int16_t x,d,i;
-        x = CSR_READ_1(sc, RE_EECMD);
-
-        x &= ~(EEDO | EEDI);
-        d = 0;
-
-        for (i=0; i<16; i++) {
-                d = d << 1;
-                RaiseClock(sc, x);
-
-                x = CSR_READ_1(sc, RE_EECMD);
-
-                x &= ~(EEDI);
-                if (x & EEDO)
-                        d |= 1;
-
-                LowerClock(sc, x);
-        }
-
-        return d;
-}
-
-/*
- * Clean up EEprom read/write setting
- */
-static void re_eeprom_EEpromCleanup(struct re_softc *sc)
-{
-        u_int16_t x;
-        x = CSR_READ_1(sc, RE_EECMD);
-
-        x &= ~(EECS | EEDI);
-        CSR_WRITE_1(sc, RE_EECMD, x);
-
-        RaiseClock(sc, x);
-        LowerClock(sc, x);
-}
-
-/*
- * Read a word of data stored in the EEPROM at address 'addr.'
- */
-static void re_eeprom_getword(struct re_softc *sc, int addr, u_int16_t *dest)
-{
-        u_int16_t x;
-
-        /* select EEPROM, reset bits, set EECS*/
-        x = CSR_READ_1(sc, RE_EECMD);
-
-        x &= ~(EEDI | EEDO | EESK | CR9346_EEM0);
-        x |= CR9346_EEM1 | EECS;
-        CSR_WRITE_1(sc, RE_EECMD, x);
-
-        /* write the read opcode and register number in that order*/
-        /* The opcode is 3bits in length, reg is 6 bits long*/
-        re_eeprom_ShiftOutBits(sc, EEPROM_READ_OPCODE, 3);
-
-        if (CSR_READ_4(sc, RE_RXCFG) & RE_RXCFG_RX_9356SEL)
-                re_eeprom_ShiftOutBits(sc, addr,8);	/*93c56=8*/
-        else
-                re_eeprom_ShiftOutBits(sc, addr,6);	/*93c46=6*/
-
-        /* Now read the data (16 bits) in from the selected EEPROM word*/
-        *dest=re_eeprom_ShiftInBits(sc);
-
-        re_eeprom_EEpromCleanup(sc);
-        return;
-}
-
-/*
- * Read a sequence of words from the EEPROM.
- */
-static void re_read_eeprom(struct re_softc *sc, caddr_t dest, int off, int cnt,
-                           int swap)
-{
-        int			i;
-        u_int16_t		word = 0, *ptr;
-
-        for (i = 0; i < cnt; i++) {
-                re_eeprom_getword(sc, off + i, &word);
-                ptr = (u_int16_t *)(dest + (i * 2));
-                if (swap)
-                        *ptr = ntohs(word);
-                else
-                        *ptr = word;
-        }
-
-        return;
 }

@@ -9,7 +9,7 @@ interrupt_mitigation = y
 
 .PATH:	${.CURDIR}/../../dev/re
 KMOD	= if_re
-SRCS	= if_re.c opt_bdg.h device_if.h bus_if.h pci_if.h opt_inet.h opt_inet6.h
+SRCS	= if_re.c if_re_eeprom.c opt_bdg.h device_if.h bus_if.h pci_if.h opt_inet.h opt_inet6.h
 
 .if $(enable_fiber_support) == y
 SRCS	+= if_fiber.c
