@@ -131,6 +131,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_mac_8168.h"
 #include "if_re_phy_8168.h"
 
+#include "if_re_mac_8126.h"
 #include "if_re_phy_8126.h"
 
 #define EE_SET(x)					\
@@ -1533,40 +1534,6 @@ static void re_set_mac_mcu_8125d_1(struct re_softc *sc)
 }
 
 static void re_set_mac_mcu_8125d_2(struct re_softc *sc)
-{
-        re_disable_mcu_bps(sc);
-}
-
-static void re_set_mac_mcu_8126a_1(struct re_softc *sc)
-{
-        static const u_int16_t mcu_patch_code_8126a_1[] = {
-                0xE010, 0xE019, 0xE01B, 0xE01D, 0xE01F, 0xE021, 0xE023, 0xE025, 0xE027,
-                0xE029, 0xE02B, 0xE02D, 0xE02F, 0xE031, 0xE033, 0xE035, 0x48C0, 0x9C66,
-                0x7446, 0x4840, 0x48C1, 0x48C2, 0x9C46, 0xC402, 0xBC00, 0x0AD6, 0xC602,
-                0xBE00, 0x0000, 0xC602, 0xBE00, 0x0000, 0xC602, 0xBE00, 0x0000, 0xC602,
-                0xBE00, 0x0000, 0xC602, 0xBE00, 0x0000, 0xC602, 0xBE00, 0x0000, 0xC602,
-                0xBE00, 0x0000, 0xC602, 0xBE00, 0x0000, 0xC602, 0xBE00, 0x0000, 0xC602,
-                0xBE00, 0x0000, 0xC602, 0xBE00, 0x0000, 0xC602, 0xBE00, 0x0000, 0xC602,
-                0xBE00, 0x0000, 0xC602, 0xBE00, 0x0000, 0xC602, 0xBE00, 0x0000
-        };
-
-        re_disable_mcu_bps(sc);
-
-        re_write_mac_mcu_ram_code(sc, mcu_patch_code_8126a_1, ARRAY_SIZE(mcu_patch_code_8126a_1));
-
-        re_mac_ocp_write(sc, 0xFC26, 0x8000);
-
-        re_mac_ocp_write(sc, 0xFC28, 0x0AAA);
-
-        re_mac_ocp_write(sc, 0xFC48, 0x0001);
-}
-
-static void re_set_mac_mcu_8126a_2(struct re_softc *sc)
-{
-        re_disable_mcu_bps(sc);
-}
-
-static void re_set_mac_mcu_8126a_3(struct re_softc *sc)
 {
         re_disable_mcu_bps(sc);
 }
