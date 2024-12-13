@@ -48,5 +48,12 @@ extern	void re_set_phy_mcu_8168evl_1(struct re_softc *sc);
 extern	void re_set_phy_mcu_8168evl_2(struct re_softc *sc);
 extern	void re_set_phy_mcu_8168f_1(struct re_softc *sc);
 extern	void re_set_phy_mcu_8168f_2(struct re_softc *sc);
+extern	void re_set_phy_mcu_8168g_1(struct re_softc *sc);
+extern	void re_set_phy_mcu_8168gu_2(struct re_softc *sc);
+extern	void re_set_phy_mcu_8168h_1(struct re_softc *sc);
+extern	void re_set_phy_mcu_8168h_2(struct re_softc *sc);
+extern	void re_set_phy_mcu_8168h_3(struct re_softc *sc);
+extern	void re_set_phy_mcu_8168ep_1(struct re_softc *sc);
+extern	void re_set_phy_mcu_8168ep_2(struct re_softc *sc);
 
 #endif	/* __IF_RE_PHY_8168_H__ */
