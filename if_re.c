@@ -118,6 +118,8 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "opt_inet.h"
 #include "opt_inet6.h"
 
+#include "if_re_hwrev.h"
+
 #include "if_re_eeprom.h"
 #include "if_re_mdio.h"
 #include "if_re_eri.h"
@@ -1760,18 +1762,18 @@ static int re_check_mac_version(struct re_softc *sc)
         int error = 0;
 
         switch(CSR_READ_4(sc, RE_TXCFG) & 0xFCF00000) {
-        case 0x00800000:
-        case 0x04000000:
+        case RE_HWREV_8169S:
+        case RE_HWREV_8110S:
                 sc->re_type = MACFG_3;
                 sc->max_jumbo_frame_size = Jumbo_Frame_7k;
                 CSR_WRITE_4(sc, RE_RXCFG, 0xFF00);
                 break;
-        case 0x10000000:
+        case RE_HWREV_8169_8110SB:
                 sc->re_type = MACFG_4;
                 sc->max_jumbo_frame_size = Jumbo_Frame_7k;
                 CSR_WRITE_4(sc, RE_RXCFG, 0xFF00);
                 break;
-        case 0x18000000:
+        case RE_HWREV_8169_8110SC:
                 sc->re_type = MACFG_5;
                 sc->max_jumbo_frame_size = Jumbo_Frame_7k;
                 CSR_WRITE_4(sc, RE_RXCFG, 0xFF00);
@@ -1781,7 +1783,7 @@ static int re_check_mac_version(struct re_softc *sc)
                 sc->max_jumbo_frame_size = Jumbo_Frame_7k;
                 CSR_WRITE_4(sc, RE_RXCFG, 0xFF00);
                 break;
-        case 0x34000000:
+        case RE_HWREV_8101E:
         case 0xB4000000:
                 sc->re_type = MACFG_11;
                 sc->max_jumbo_frame_size = ETHERMTU;
@@ -1820,7 +1822,7 @@ static int re_check_mac_version(struct re_softc *sc)
                 sc->re_if_flags |= RL_FLAG_DESCV2;
                 CSR_WRITE_4(sc, RE_RXCFG, 0xE700);
                 break;
-        case 0x34C00000:
+        case RE_HWREV_8103E:
         case 0x24C00000:
                 sc->re_type = MACFG_17;
                 sc->max_jumbo_frame_size = ETHERMTU;
@@ -1846,7 +1848,7 @@ static int re_check_mac_version(struct re_softc *sc)
                 sc->max_jumbo_frame_size = Jumbo_Frame_4k;
                 CSR_WRITE_4(sc, RE_RXCFG, 0xE700);
                 break;
-        case 0x38000000:
+        case RE_HWREV_8168B_SPIN2:
                 sc->re_type = MACFG_22;
                 sc->max_jumbo_frame_size = Jumbo_Frame_4k;
                 CSR_WRITE_4(sc, RE_RXCFG, 0xE700);
@@ -1969,7 +1971,7 @@ static int re_check_mac_version(struct re_softc *sc)
                 sc->re_if_flags |= RL_FLAG_DESCV2 | RL_FLAG_PHYWAKE_PM | RL_FLAG_MAGIC_PACKET_V2;
                 CSR_WRITE_4(sc, RE_RXCFG, 0xBF00);
                 break;
-        case 0x44000000:
+        case RE_HWREV_8402:
                 sc->re_type = MACFG_53;
                 sc->max_jumbo_frame_size = ETHERMTU;
                 sc->re_if_flags |= RL_FLAG_DESCV2 | RL_FLAG_PHYWAKE_PM | RL_FLAG_MAGIC_PACKET_V2;
