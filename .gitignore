@@ -1,4 +1,5 @@
-.depend.if_re.o
+*.o
+.depend.*.o
 bus_if.h
 device_if.h
 export_syms
