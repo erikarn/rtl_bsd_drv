@@ -252,3 +252,31 @@ re_mdio_read(struct re_softc *sc,u_int8_t RegAddr)
 
         return RegData;
 }
+
+
+void
+re_clear_set_eth_phy_bit(struct re_softc *sc, u_int8_t addr,
+    u_int16_t clearmask, u_int16_t setmask)
+{
+	u_int16_t PhyRegValue;
+
+	PhyRegValue = re_mdio_read(sc, addr);
+	PhyRegValue &= ~clearmask;
+	PhyRegValue |= setmask;
+	re_mdio_write(sc, addr, PhyRegValue);
+}
+
+void
+re_clear_eth_phy_bit(struct re_softc *sc, u_int8_t addr, u_int16_t mask)
+{
+
+	re_clear_set_eth_phy_bit(sc, addr, mask, 0);
+}
+
+void
+re_set_eth_phy_bit(struct re_softc *sc, u_int8_t addr, u_int16_t mask)
+{
+
+	re_clear_set_eth_phy_bit(sc, addr, 0, mask);
+}
+

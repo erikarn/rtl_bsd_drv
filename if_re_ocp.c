@@ -422,3 +422,59 @@ re_ocp_write(struct re_softc *sc, u_int16_t addr, u_int8_t len, u_int32_t value)
         else if (sc->HwSuppOcpChannelVer == 3)
                 re_ocp_write_with_oob_base_address(sc, addr, len, value, RTL8168FP_OOBMAC_BASE);
 }
+
+void
+re_clear_set_eth_ocp_phy_bit(struct re_softc *sc, u_int16_t addr,
+    u_int16_t clearmask, u_int16_t setmask)
+{
+	u_int16_t PhyRegValue;
+
+	PhyRegValue = re_real_ocp_phy_read(sc, addr);
+	PhyRegValue &= ~clearmask;
+	PhyRegValue |= setmask;
+	re_real_ocp_phy_write(sc, addr, PhyRegValue);
+}
+
+void
+re_clear_eth_ocp_phy_bit( struct re_softc *sc, u_int16_t addr,
+    u_int16_t mask)
+{
+
+	re_clear_set_eth_ocp_phy_bit(sc, addr, mask, 0);
+}
+
+void
+re_set_eth_ocp_phy_bit(struct re_softc *sc, u_int16_t addr,
+    u_int16_t mask)
+{
+
+	re_clear_set_eth_ocp_phy_bit(sc, addr, 0, mask);
+}
+
+void
+re_clear_set_mac_ocp_bit(struct re_softc *sc, u_int16_t addr,
+    u_int16_t clearmask, u_int16_t setmask)
+{
+	u_int16_t PhyRegValue;
+
+	PhyRegValue = re_mac_ocp_read(sc, addr);
+	PhyRegValue &= ~clearmask;
+	PhyRegValue |= setmask;
+	re_mac_ocp_write(sc, addr, PhyRegValue);
+}
+
+void
+re_clear_mac_ocp_bit(struct re_softc *sc, u_int16_t addr,
+    u_int16_t mask)
+{
+
+	re_clear_set_mac_ocp_bit(sc, addr, mask, 0);
+}
+
+void
+re_set_mac_ocp_bit(struct re_softc *sc, u_int16_t addr,
+    u_int16_t mask)
+{
+
+	re_clear_set_mac_ocp_bit(sc, addr, 0, mask);
+}

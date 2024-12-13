@@ -48,4 +48,12 @@ extern	void re_mdio_write(struct re_softc *sc,u_int8_t RegAddr,
     u_int16_t RegData);
 extern	u_int16_t re_mdio_read(struct re_softc *sc,u_int8_t RegAddr);
 
+extern	void re_clear_set_eth_phy_bit(struct re_softc *sc, u_int8_t addr,
+	    u_int16_t clearmask, u_int16_t setmask);
+extern	void re_clear_eth_phy_bit(struct re_softc *sc, u_int8_t addr,
+	    u_int16_t mask);
+extern	void re_set_eth_phy_bit(struct re_softc *sc, u_int8_t addr,
+	    u_int16_t mask);
+
+
 #endif	/* __IF_RE_MDIO_H__ */

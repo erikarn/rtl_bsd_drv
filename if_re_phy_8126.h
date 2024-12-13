@@ -39,38 +39,19 @@
  * Electrical Engineering Department
  * Columbia University, New York City
  */
-#ifndef	__IF_RE_OCP_H__
-#define	__IF_RE_OCP_H__
+#ifndef	__IF_RE_PHY_8126_H__
+#define	__IF_RE_PHY_8126_H__
 
 struct re_softc;
 
-u_int16_t re_real_ocp_phy_read( struct re_softc *sc, u_int16_t OcpRegAddr);
-u_int16_t re_ocp_phy_read( struct re_softc *sc, u_int16_t PhyPage, u_int8_t PhyRegNum);
-void re_real_ocp_phy_write( struct re_softc *sc, u_int16_t OcpRegAddr, u_int16_t RegData);
-void re_ocp_phy_write( struct re_softc *sc, u_int16_t PhyPage, u_int8_t PhyRegNum, u_int16_t RegData);
-void re_mac_ocp_write( struct re_softc *sc, u_int16_t ExtRegAddr, u_int16_t RegData);
-u_int16_t re_mac_ocp_read( struct re_softc *sc, u_int16_t ExtRegAddr);
-u_int32_t real_ocp_read(struct re_softc *sc, u_int16_t addr, u_int8_t len);
-u_int32_t re_ocp_read_with_oob_base_address(struct re_softc *sc,
-    u_int16_t addr, u_int8_t len, const u_int32_t base_address);
-u_int32_t re_ocp_read(struct re_softc *sc, u_int16_t addr, u_int8_t len);
-int real_ocp_write(struct re_softc *sc, u_int16_t addr, u_int8_t len, u_int32_t value);
-int re_ocp_write_with_oob_base_address(struct re_softc *sc, u_int16_t addr,
-    u_int8_t len, u_int32_t value, const u_int32_t base_address);
-void re_ocp_write(struct re_softc *sc, u_int16_t addr, u_int8_t len, u_int32_t value);
+extern	void re_real_set_phy_mcu_8126a_1_1(struct re_softc *sc);
+extern	void re_real_set_phy_mcu_8126a_1_2(struct re_softc *sc);
+extern	void re_real_set_phy_mcu_8126a_1_3(struct re_softc *sc);
+extern	void re_set_phy_mcu_8126a_1(struct re_softc *sc);
+extern	void re_real_set_phy_mcu_8126a_2_1(struct re_softc *sc);
+extern	void re_real_set_phy_mcu_8126a_2_3(struct re_softc *sc);
+extern	void re_set_phy_mcu_8126a_2(struct re_softc *sc);
+extern	void re_real_set_phy_mcu_8126a_3_1(struct re_softc *sc);
+extern	void re_set_phy_mcu_8126a_3(struct re_softc *sc);
 
-extern	void re_clear_set_eth_ocp_phy_bit(struct re_softc *sc,
-	    u_int16_t addr, u_int16_t clearmask, u_int16_t setmask);
-extern	void re_clear_eth_ocp_phy_bit( struct re_softc *sc, u_int16_t addr,
-	    u_int16_t mask);
-extern	void re_set_eth_ocp_phy_bit(struct re_softc *sc, u_int16_t addr,
-	    u_int16_t mask);
-
-extern	void re_clear_set_mac_ocp_bit(struct re_softc *sc, u_int16_t addr,
-	    u_int16_t clearmask, u_int16_t setmask);
-extern	void re_clear_mac_ocp_bit(struct re_softc *sc, u_int16_t addr,
-	    u_int16_t mask);
-extern	void re_set_mac_ocp_bit(struct re_softc *sc, u_int16_t addr,
-	    u_int16_t mask);
-
-#endif	/* __IF_RE_OCP_H__ */
+#endif	/* __IF_RE_PHY_8126_H__ */
