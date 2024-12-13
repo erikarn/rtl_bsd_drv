@@ -114,7 +114,7 @@
 #include "if_re_csi.h"
 #include "if_re_mac_mcu.h"
 
-#include "if_re_8168.h"
+#include "if_re_mac_8168.h"
 
 static bool
 re_check_dash_other_fun_present(struct re_softc *sc)

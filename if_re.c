@@ -128,7 +128,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_mac_mcu.h"
 #include "if_re_phy_mcu.h"
 
-#include "if_re_8168.h"
+#include "if_re_mac_8168.h"
 #include "if_re_phy_8168.h"
 
 #define EE_SET(x)					\

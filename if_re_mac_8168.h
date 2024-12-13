@@ -39,8 +39,8 @@
  * Electrical Engineering Department
  * Columbia University, New York City
  */
-#ifndef	__IF_RE_8168_H__
-#define	__IF_RE_8168_H__
+#ifndef	__IF_RE_MAC_8168_H__
+#define	__IF_RE_MAC_8168_H__
 
 extern	void re_set_mac_mcu_8168g_1(struct re_softc *sc);
 extern	void re_set_mac_mcu_8168gu_1(struct re_softc *sc);
@@ -57,4 +57,4 @@ extern	void re_set_mac_mcu_8168fp_2(struct re_softc *sc);
 extern	void re_set_mac_mcu_8168fp_3(struct re_softc *sc);
 extern	void re_set_mac_mcu_8168fp_4(struct re_softc *sc);
 
-#endif	/* __IF_RE_8168_H__ */
+#endif	/* __IF_RE_MAC_8168_H__ */
