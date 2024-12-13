@@ -40,17 +40,6 @@
  * Columbia University, New York City
  */
 
-#include <sys/cdefs.h>
-
-#ifdef ENABLE_FIBER_SUPPORT
-#define FIBER_SUFFIX "-FIBER"
-#else
-#define FIBER_SUFFIX ""
-#endif
-#define RE_VERSION "1.100.00" FIBER_SUFFIX
-
-__FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ "  wpaul Exp $");
-
 /*
 * This driver also support Realtek RTL8110/RTL8169, RTL8111/RTL8168, RTL8125, RTL8126, and RTL8136/RTL810x.
 */
