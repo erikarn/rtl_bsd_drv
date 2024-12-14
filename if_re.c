@@ -120,6 +120,8 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 
 #include "if_re_hwrev.h"
 
+#include "if_re_misc.h"
+
 #include "if_re_eeprom.h"
 #include "if_re_mdio.h"
 #include "if_re_eri.h"
@@ -134,6 +136,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_phy_8168.h"
 
 #include "if_re_mac_8125.h"
+#include "if_re_hw_8125.h"
 #include "if_re_phy_8125.h"
 
 #include "if_re_mac_8126.h"
@@ -232,7 +235,6 @@ static u_int8_t re_set_wol_linkspeed 	__P((struct re_softc *));
 static void re_start				__P((struct ifnet *));
 static void re_start_locked			__P((struct ifnet *));
 static int re_encap				__P((struct re_softc *, struct mbuf **));
-static int re_8125_pad				__P((struct re_softc *, struct mbuf *));
 static void WritePacket				__P((struct re_softc *, bus_dma_segment_t*, int, int, uint32_t, uint32_t, uint32_t));
 static void re_start_tx				__P((struct re_softc *));
 static uint32_t CountFreeTxDescNum			__P((struct re_descriptor *));
@@ -6993,22 +6995,6 @@ static void re_start(struct ifnet *ifp)  	/* Transmit Packet*/
         RE_UNLOCK(sc);
 }
 
-static uint16_t
-re_get_eth_type(struct mbuf *mb)
-{
-        struct ether_vlan_header *eh;
-        uint16_t eth_type;
-
-        eh = mtod(mb, struct ether_vlan_header *);
-        if (mb->m_len < ETHER_HDR_LEN)
-                return (0);
-        if (eh->evl_encap_proto == htons(ETHERTYPE_VLAN))
-                eth_type = ntohs(eh->evl_proto);
-        else
-                eth_type = ntohs(eh->evl_encap_proto);
-        return (eth_type);
-}
-
 static int
 re_get_l4hdr_offset(struct mbuf *mb)
 {
@@ -7343,49 +7329,6 @@ static int re_encap(struct re_softc *sc,struct mbuf **m_head)
 
         *m_head = m_new;
 
-        return(0);
-}
-
-#define MIN_IPV4_PATCH_PKT_LEN (121)
-#define MIN_IPV6_PATCH_PKT_LEN (147)
-static int re_8125_pad(struct re_softc *sc,struct mbuf *m_head)
-{
-        uint32_t min_pkt_len;
-        uint16_t ether_type;
-
-        if ((m_head->m_pkthdr.csum_flags & (CSUM_TCP | CSUM_UDP)) != 0)
-                goto out;
-
-        ether_type = re_get_eth_type(m_head);
-        min_pkt_len = RE_MIN_FRAMELEN;
-        if (ether_type == ETHERTYPE_IP) {
-                struct ip *ip = (struct ip *)mtodo(m_head, ETHER_HDR_LEN);
-                if (ip->ip_p == IPPROTO_UDP)
-                        min_pkt_len = MIN_IPV4_PATCH_PKT_LEN;
-        } else if (ether_type == ETHERTYPE_IPV6) {
-                struct ip6_hdr *ip6 = (struct ip6_hdr *)mtodo(m_head, ETHER_HDR_LEN);
-                if (ip6->ip6_nxt == IPPROTO_UDP)
-                        min_pkt_len = MIN_IPV6_PATCH_PKT_LEN;
-        }
-
-        if (m_head->m_pkthdr.len < min_pkt_len) {
-                static const uint8_t pad[MIN_IPV4_PATCH_PKT_LEN];
-                uint16_t pad_len = min_pkt_len - m_head->m_pkthdr.len;
-                if (!m_append(m_head, pad_len, pad))
-                        return (1);
-
-                if (ether_type == ETHERTYPE_IP &&
-                    m_head->m_pkthdr.csum_flags & CSUM_IP) {
-                        struct ip *ip;
-                        m_head->m_data += ETHER_HDR_LEN;
-                        ip = mtod(m_head, struct ip *);
-                        ip->ip_sum = in_cksum(m_head, ip->ip_hl << 2);
-                        m_head->m_data -= ETHER_HDR_LEN;
-                        m_head->m_pkthdr.csum_flags &= ~CSUM_IP;
-                }
-        }
-
-out:
         return(0);
 }
 
