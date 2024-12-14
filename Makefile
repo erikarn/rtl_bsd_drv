@@ -23,6 +23,7 @@ SRCS	= if_re.c if_re_eeprom.c if_re_mdio.c if_re_ocp.c if_re_eri.c \
 	  if_re_phy_8126.c \
 	  if_re_mac_8168.c \
 	  if_re_phy_8168.c \
+	  if_re_phy_8169.c \
 	  if_re_mac_8411.c \
 	  if_re_phy_8411.c \
 	  opt_bdg.h device_if.h bus_if.h pci_if.h opt_inet.h opt_inet6.h
