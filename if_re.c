@@ -145,14 +145,6 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_mac_8411.h"
 #include "if_re_phy_8411.h"
 
-#define EE_SET(x)					\
-	CSR_WRITE_1(sc, RE_EECMD,			\
-		CSR_READ_1(sc, RE_EECMD) | x)
-
-#define EE_CLR(x)					\
-	CSR_WRITE_1(sc, RE_EECMD,			\
-		CSR_READ_1(sc, RE_EECMD) & ~x)
-
 struct bus_dma_tag {
         struct bus_dma_tag_common common;
         int                     map_count;
