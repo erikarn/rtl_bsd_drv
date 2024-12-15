@@ -2132,14 +2132,14 @@ static int re_check_mac_version(struct re_softc *sc)
                                    RL_FLAG_8168G_PLUS | RL_FLAG_MAGIC_PACKET_V3;
                 CSR_WRITE_4(sc, RE_RXCFG, 0x40C00400);
                 break;
-        case 0x64000000:
+        case RE_HWREV_8125B_REV_A:
                 sc->re_type = MACFG_82;
                 sc->max_jumbo_frame_size = Jumbo_Frame_9k;
                 sc->re_if_flags |= RL_FLAG_DESCV2 | RL_FLAG_PHYWAKE_PM |
                                    RL_FLAG_8168G_PLUS | RL_FLAG_MAGIC_PACKET_V3;
                 CSR_WRITE_4(sc, RE_RXCFG, 0x40C00C00);
                 break;
-        case 0x64100000:
+        case RE_HWREV_8125B_REV_B:
                 sc->re_type = MACFG_83;
                 sc->max_jumbo_frame_size = Jumbo_Frame_9k;
                 sc->re_if_flags |= RL_FLAG_DESCV2 | RL_FLAG_PHYWAKE_PM |
