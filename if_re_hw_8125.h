@@ -43,5 +43,7 @@
 #define	__IF_RE_HW_8125_H__
 
 extern	int re_8125_pad(struct re_softc *sc,struct mbuf *m_head);
+extern	int re_ifmedia_upd_8125(struct ifnet *ifp);
+extern	void re_ifmedia_sts_8125(struct ifnet *ifp, struct ifmediareq *ifmr);
 
 #endif	/* __IF_RE_HW_8125_H__ */
