@@ -75,8 +75,8 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 
 #include <net/bpf.h>
 
-#include <vm/vm.h>              /* for vtophys */
-#include <vm/pmap.h>            /* for vtophys */
+#include <vm/vm.h>	      /* for vtophys */
+#include <vm/pmap.h>	    /* for vtophys */
 #include <machine/clock.h>      /* for DELAY */
 
 #include <machine/bus.h>
@@ -124,45 +124,44 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #define MIN_IPV4_PATCH_PKT_LEN (121)
 #define MIN_IPV6_PATCH_PKT_LEN (147)
 
-
 int
 re_8125_pad(struct re_softc *sc,struct mbuf *m_head)
 {
-        uint32_t min_pkt_len;
-        uint16_t ether_type;
+	uint32_t min_pkt_len;
+	uint16_t ether_type;
 
-        if ((m_head->m_pkthdr.csum_flags & (CSUM_TCP | CSUM_UDP)) != 0)
-                goto out;
+	if ((m_head->m_pkthdr.csum_flags & (CSUM_TCP | CSUM_UDP)) != 0)
+		goto out;
 
-        ether_type = re_get_eth_type(m_head);
-        min_pkt_len = RE_MIN_FRAMELEN;
-        if (ether_type == ETHERTYPE_IP) {
-                struct ip *ip = (struct ip *)mtodo(m_head, ETHER_HDR_LEN);
-                if (ip->ip_p == IPPROTO_UDP)
-                        min_pkt_len = MIN_IPV4_PATCH_PKT_LEN;
-        } else if (ether_type == ETHERTYPE_IPV6) {
-                struct ip6_hdr *ip6 = (struct ip6_hdr *)mtodo(m_head, ETHER_HDR_LEN);
-                if (ip6->ip6_nxt == IPPROTO_UDP)
-                        min_pkt_len = MIN_IPV6_PATCH_PKT_LEN;
-        }
+	ether_type = re_get_eth_type(m_head);
+	min_pkt_len = RE_MIN_FRAMELEN;
+	if (ether_type == ETHERTYPE_IP) {
+		struct ip *ip = (struct ip *)mtodo(m_head, ETHER_HDR_LEN);
+		if (ip->ip_p == IPPROTO_UDP)
+			min_pkt_len = MIN_IPV4_PATCH_PKT_LEN;
+	} else if (ether_type == ETHERTYPE_IPV6) {
+		struct ip6_hdr *ip6 = (struct ip6_hdr *)mtodo(m_head, ETHER_HDR_LEN);
+		if (ip6->ip6_nxt == IPPROTO_UDP)
+			min_pkt_len = MIN_IPV6_PATCH_PKT_LEN;
+	}
 
-        if (m_head->m_pkthdr.len < min_pkt_len) {
-                static const uint8_t pad[MIN_IPV4_PATCH_PKT_LEN];
-                uint16_t pad_len = min_pkt_len - m_head->m_pkthdr.len;
-                if (!m_append(m_head, pad_len, pad))
-                        return (1);
+	if (m_head->m_pkthdr.len < min_pkt_len) {
+		static const uint8_t pad[MIN_IPV4_PATCH_PKT_LEN];
+		uint16_t pad_len = min_pkt_len - m_head->m_pkthdr.len;
+		if (!m_append(m_head, pad_len, pad))
+			return (1);
 
-                if (ether_type == ETHERTYPE_IP &&
-                    m_head->m_pkthdr.csum_flags & CSUM_IP) {
-                        struct ip *ip;
-                        m_head->m_data += ETHER_HDR_LEN;
-                        ip = mtod(m_head, struct ip *);
-                        ip->ip_sum = in_cksum(m_head, ip->ip_hl << 2);
-                        m_head->m_data -= ETHER_HDR_LEN;
-                        m_head->m_pkthdr.csum_flags &= ~CSUM_IP;
-                }
-        }
+		if (ether_type == ETHERTYPE_IP &&
+		    m_head->m_pkthdr.csum_flags & CSUM_IP) {
+			struct ip *ip;
+			m_head->m_data += ETHER_HDR_LEN;
+			ip = mtod(m_head, struct ip *);
+			ip->ip_sum = in_cksum(m_head, ip->ip_hl << 2);
+			m_head->m_data -= ETHER_HDR_LEN;
+			m_head->m_pkthdr.csum_flags &= ~CSUM_IP;
+		}
+	}
 
 out:
-        return(0);
+	return(0);
 }
