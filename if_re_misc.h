@@ -43,5 +43,6 @@
 #define	__IF_RE_MISC_H__
 
 extern	uint16_t re_get_eth_type(struct mbuf *mb);
+extern	u_int8_t re_link_ok(struct re_softc *sc);
 
 #endif	/* __IF_RE_MISC_H__ */

@@ -136,3 +136,13 @@ re_get_eth_type(struct mbuf *mb)
 	return (eth_type);
 }
 
+u_int8_t
+re_link_ok(struct re_softc *sc)
+{
+	u_int8_t retval;
+
+	retval = (CSR_READ_1(sc, RE_PHY_STATUS) & RL_PHY_STATUS_LINK_STS)
+	    ? 1 : 0;
+
+	return (retval);
+}
