@@ -136,6 +136,37 @@ re_get_eth_type(struct mbuf *mb)
 	return (eth_type);
 }
 
+bool
+is_zero_ether_addr(const u_int8_t * addr)
+{
+
+	return ((addr[0] + addr[1] + addr[2] + addr[3] +
+	    addr[4] + addr[5]) == 0x00);
+}
+
+bool
+is_multicast_ether_addr(const u_int8_t * addr)
+{
+
+	return (0x01 & addr[0]);
+}
+
+#if 0
+bool
+is_broadcast_ether_addr(const u_int8_t * addr)
+{
+        return ((addr[0] + addr[1] + addr[2] + addr[3] + addr[4] + addr[5]) == (6 * 0xff));
+}
+#endif
+
+bool
+is_valid_ether_addr(const u_int8_t * addr)
+{
+
+	return !is_multicast_ether_addr(addr) && !is_zero_ether_addr(addr);
+}
+
+
 u_int8_t
 re_link_ok(struct re_softc *sc)
 {
