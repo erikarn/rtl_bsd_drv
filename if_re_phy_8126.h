@@ -54,4 +54,12 @@ extern	void re_set_phy_mcu_8126a_2(struct re_softc *sc);
 extern	void re_real_set_phy_mcu_8126a_3_1(struct re_softc *sc);
 extern	void re_set_phy_mcu_8126a_3(struct re_softc *sc);
 
+extern	void re_hw_phy_config_8126a_1(struct re_softc *sc,
+	    int phy_power_saving);
+extern	void re_hw_phy_config_8126a_2(struct re_softc *sc,
+	    int phy_power_saving);
+extern	void re_hw_phy_config_8126a_3(struct re_softc *sc,
+	    int phy_power_saving);
+
+
 #endif	/* __IF_RE_PHY_8126_H__ */

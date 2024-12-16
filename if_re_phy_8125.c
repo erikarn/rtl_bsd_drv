@@ -3184,3 +3184,20 @@ re_exit_oob_phy_8125(struct re_softc *sc)
 			break;
 	}
 }
+
+void
+re_hw_phy_config_8125d_2(struct re_softc *sc, int phy_power_saving)
+{
+
+	re_set_eth_ocp_phy_bit(sc, 0xA442, BIT_11);
+
+	re_set_eth_ocp_phy_bit(sc, 0xA430, BIT_12 | BIT_0);
+	re_set_eth_ocp_phy_bit(sc, 0xA442, BIT_7);
+
+	if (phy_power_saving == 1) {
+		re_set_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+	} else {
+		re_clear_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+		DELAY(20000);
+	}
+}
