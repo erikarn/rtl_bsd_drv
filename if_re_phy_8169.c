@@ -125,7 +125,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_phy_8169.h"
 
 void
-re_hw_phy_config_8169(struct re_softc *sc)
+re_hw_phy_config_8169_8110s(struct re_softc *sc)
 {
 
 	CSR_WRITE_1(sc, 0x82, CSR_READ_1(sc, 0x82)|BIT_0);
@@ -193,4 +193,61 @@ re_hw_phy_config_8169(struct re_softc *sc)
 	re_mdio_write(sc, 0x00, 0x9200);
 
 	CSR_WRITE_1(sc, 0x82, 0x0d);
+}
+
+void
+re_hw_phy_config_8169_8110sb(struct re_softc *sc)
+{
+	re_mdio_write(sc, 0x1f, 0x0002);
+	re_mdio_write(sc, 0x01, 0x90D0);
+	re_mdio_write(sc, 0x1f, 0x0000);
+	// re_mdio_write(sc, 0x1e, 0x8c00); /* PHY link down with some Giga switch */
+}
+
+void
+re_hw_phy_config_8169_8110sc(struct re_softc *sc)
+{
+	re_mdio_write(sc, 0x1f, 0x0001);
+	re_mdio_write(sc, 0x04, 0x0000);
+	re_mdio_write(sc, 0x03, 0x00a1);
+	re_mdio_write(sc, 0x02, 0x0008);
+	re_mdio_write(sc, 0x01, 0x0120);
+	re_mdio_write(sc, 0x00, 0x1000);
+	re_mdio_write(sc, 0x04, 0x0800);
+
+	re_mdio_write(sc, 0x04, 0x9000);
+	re_mdio_write(sc, 0x03, 0x802f);
+	re_mdio_write(sc, 0x02, 0x4f02);
+	re_mdio_write(sc, 0x01, 0x0409);
+	re_mdio_write(sc, 0x00, 0xf099);
+	re_mdio_write(sc, 0x04, 0x9800);
+
+	re_mdio_write(sc, 0x04, 0xa000);
+	re_mdio_write(sc, 0x03, 0xdf01);
+	re_mdio_write(sc, 0x02, 0xdf20);
+	re_mdio_write(sc, 0x01, 0xff95);
+	re_mdio_write(sc, 0x00, 0xba00);
+	re_mdio_write(sc, 0x04, 0xa800);
+
+	re_mdio_write(sc, 0x04, 0xf000);
+	re_mdio_write(sc, 0x03, 0xdf01);
+	re_mdio_write(sc, 0x02, 0xdf20);
+	re_mdio_write(sc, 0x01, 0x101a);
+	re_mdio_write(sc, 0x00, 0xa0ff);
+	re_mdio_write(sc, 0x04, 0xf800);
+	re_mdio_write(sc, 0x04, 0x0000);
+	re_mdio_write(sc, 0x1f, 0x0000);
+
+	re_mdio_write(sc, 0x1f, 0x0001);
+	re_mdio_write(sc, 0x10, 0xf41b);
+	re_mdio_write(sc, 0x14, 0xfb54);
+	re_mdio_write(sc, 0x18, 0xf5c7);
+	re_mdio_write(sc, 0x1f, 0x0000);
+
+	re_mdio_write(sc, 0x1f, 0x0001);
+	re_mdio_write(sc, 0x17, 0x0CC0);
+	re_mdio_write(sc, 0x1f, 0x0000);
+
+	re_mdio_write(sc, 0x1f, 0x0001);
+	re_mdio_write(sc, 0x10, 0xf01b);
 }
