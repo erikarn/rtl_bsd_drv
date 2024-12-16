@@ -1192,32 +1192,6 @@ static void Dash2DisableTxRx(struct re_softc *sc)
         Dash2DisableRx(sc);
 }
 
-static inline bool
-is_zero_ether_addr(const u_int8_t * addr)
-{
-        return ((addr[0] + addr[1] + addr[2] + addr[3] + addr[4] + addr[5]) == 0x00);
-}
-
-static inline bool
-is_multicast_ether_addr(const u_int8_t * addr)
-{
-        return (0x01 & addr[0]);
-}
-
-/*
-static inline bool
-is_broadcast_ether_addr(const u_int8_t * addr)
-{
-        return ((addr[0] + addr[1] + addr[2] + addr[3] + addr[4] + addr[5]) == (6 * 0xff));
-}
-*/
-
-static inline bool
-is_valid_ether_addr(const u_int8_t * addr)
-{
-        return !is_multicast_ether_addr(addr) && !is_zero_ether_addr(addr);
-}
-
 static void re_disable_now_is_oob(struct re_softc *sc)
 {
         if (sc->re_hw_supp_now_is_oob_ver == 1)

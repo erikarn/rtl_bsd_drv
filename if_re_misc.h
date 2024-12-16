@@ -43,6 +43,9 @@
 #define	__IF_RE_MISC_H__
 
 extern	uint16_t re_get_eth_type(struct mbuf *mb);
+extern	bool is_zero_ether_addr(const u_int8_t * addr);
+extern	bool is_multicast_ether_addr(const u_int8_t * addr);
+extern	bool is_valid_ether_addr(const u_int8_t * addr);
 extern	u_int8_t re_link_ok(struct re_softc *sc);
 
 #endif	/* __IF_RE_MISC_H__ */
