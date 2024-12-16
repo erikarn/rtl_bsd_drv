@@ -42,6 +42,8 @@
 
 #ifndef	__IF_RE_PHY_8169_H__
 #define	__IF_RE_PHY_8169_H__
-extern	void re_hw_phy_config_8169(struct re_softc *sc);
+extern	void re_hw_phy_config_8169_8110s(struct re_softc *sc);
+extern	void re_hw_phy_config_8169_8110sb(struct re_softc *sc);
+extern	void re_hw_phy_config_8169_8110sc(struct re_softc *sc);
 
 #endif	/* __IF_RE_PHY_8169_H__ */
