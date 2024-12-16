@@ -1329,27 +1329,7 @@ static void re_exit_oob(struct re_softc *sc)
         case MACFG_90:
         case MACFG_91:
         case MACFG_92:
-                CSR_WRITE_1(sc, 0xF2, CSR_READ_1(sc, 0xF2) | BIT_3);
-                DELAY(2000);
-
-                if (CSR_READ_1(sc, RE_COMMAND) & (RE_CMD_TX_ENB | RE_CMD_RX_ENB)) {
-                        DELAY(100);
-                        CSR_WRITE_1(sc, RE_COMMAND, CSR_READ_1(sc, RE_COMMAND) & ~(RE_CMD_TX_ENB | RE_CMD_RX_ENB));
-                }
-
-                CSR_WRITE_1(sc, RE_COMMAND, CSR_READ_1(sc, RE_COMMAND) | RE_CMD_STOP_REQ);
-
-                for (i = 0; i < 3000; i++) {
-                        DELAY(50);
-                        if ((CSR_READ_1(sc, RE_MCU_CMD) & (RE_TXFIFO_EMPTY | RE_RXFIFO_EMPTY)) == (RE_TXFIFO_EMPTY | RE_RXFIFO_EMPTY))
-                                break;
-                }
-
-                for (i = 0; i < 3000; i++) {
-                        DELAY(50);
-                        if ((CSR_READ_2(sc, RE_IntrMitigate) & (BIT_0 | BIT_1 | BIT_8)) == (BIT_0 | BIT_1 | BIT_8))
-                                break;
-                }
+                re_exit_oob_phy_8125(sc);
                 break;
         }
 

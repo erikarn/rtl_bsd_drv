@@ -59,4 +59,7 @@ extern	void re_real_set_phy_mcu_8125bp_1_1(struct re_softc *sc);
 extern	void re_real_set_phy_mcu_8125bp_1_2(struct re_softc *sc);
 extern	void re_set_phy_mcu_8125bp_1(struct re_softc *sc);
 
+extern	void re_exit_oob_phy_8125(struct re_softc *sc);
+
+
 #endif	/* __IF_RE_PHY_8125_H__ */
