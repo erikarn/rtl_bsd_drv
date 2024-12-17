@@ -3185,6 +3185,848 @@ re_exit_oob_phy_8125(struct re_softc *sc)
 	}
 }
 
+/* MACFG_80 */
+void
+re_hw_phy_config_8125a_1(struct re_softc *sc, int phy_power_saving)
+{
+
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD40, 0x03FF, 0x84);
+
+	re_set_eth_ocp_phy_bit(sc, 0xAD4E, BIT_4);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD16, 0x03FF, 0x0006);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD32, 0x003F, 0x0006);
+	re_clear_eth_ocp_phy_bit(sc, 0xAC08, BIT_12);
+	re_clear_eth_ocp_phy_bit(sc, 0xAC08, BIT_8);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAC8A,
+	     BIT_15|BIT_14|BIT_13|BIT_12,
+	     BIT_14|BIT_13|BIT_12);
+	re_set_eth_ocp_phy_bit(sc, 0xAD18, BIT_10);
+	re_set_eth_ocp_phy_bit(sc, 0xAD1A, 0x3FF);
+	re_set_eth_ocp_phy_bit(sc, 0xAD1C, 0x3FF);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x80EA);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0xC400);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80EB);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0x0700, 0x0300);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80F8);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x1C00);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80F1);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x3000);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x80FE);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0xA500);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8102);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x5000);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8105);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x3300);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8100);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x7000);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8104);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0xF000);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8106);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x6500);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80DC);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0xED00);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80DF);
+	re_set_eth_ocp_phy_bit(sc, 0xA438, BIT_8);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80E1);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_8);
+
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBF06, 0x003F, 0x38);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x819F);
+	re_real_ocp_phy_write(sc, 0xA438, 0xD0B6);
+
+	re_real_ocp_phy_write(sc, 0xBC34, 0x5555);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBF0A,
+	    BIT_11|BIT_10|BIT_9, BIT_11|BIT_9);
+
+	re_clear_eth_ocp_phy_bit(sc, 0xA5C0, BIT_10);
+
+	re_set_eth_ocp_phy_bit(sc, 0xA442, BIT_11);
+
+	if (phy_power_saving == 1) {
+		re_set_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+	} else {
+		re_clear_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+		DELAY(20000);
+	}
+}
+
+/* MACFG_81 */
+void
+re_hw_phy_config_8125a_2(struct re_softc *sc, int phy_power_saving)
+{
+
+	re_set_eth_ocp_phy_bit(sc, 0xAD4E, BIT_4);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD16, 0x03FF, 0x03FF);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD32, 0x003F, 0x0006);
+	re_clear_eth_ocp_phy_bit(sc, 0xAC08, BIT_12);
+	re_clear_eth_ocp_phy_bit(sc, 0xAC08, BIT_8);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xACC0, BIT_1|BIT_0, BIT_1);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD40, BIT_7|BIT_6|BIT_5, BIT_6);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD40, BIT_2|BIT_1|BIT_0, BIT_2);
+	re_clear_eth_ocp_phy_bit(sc, 0xAC14, BIT_7);
+	re_clear_eth_ocp_phy_bit(sc, 0xAC80, BIT_9|BIT_8);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAC5E, BIT_2|BIT_1|BIT_0, BIT_1);
+	re_real_ocp_phy_write(sc, 0xAD4C, 0x00A8);
+	re_real_ocp_phy_write(sc, 0xAC5C, 0x01FF);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAC8A,
+	    BIT_7|BIT_6|BIT_5|BIT_4,
+	    BIT_5|BIT_4);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8157);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB87E, 0xFF00, 0x0500);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8159);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB87E, 0xFF00, 0x0700);
+
+
+	re_real_ocp_phy_write(sc, 0xB87C, 0x80A2);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x0153);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x809C);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x0153);
+
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x81B3);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0043);
+	re_real_ocp_phy_write(sc, 0xA438, 0x00A7);
+	re_real_ocp_phy_write(sc, 0xA438, 0x00D6);
+	re_real_ocp_phy_write(sc, 0xA438, 0x00EC);
+	re_real_ocp_phy_write(sc, 0xA438, 0x00F6);
+	re_real_ocp_phy_write(sc, 0xA438, 0x00FB);
+	re_real_ocp_phy_write(sc, 0xA438, 0x00FD);
+	re_real_ocp_phy_write(sc, 0xA438, 0x00FF);
+	re_real_ocp_phy_write(sc, 0xA438, 0x00BB);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0058);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0029);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0013);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0009);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0004);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0002);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x8257);
+	re_real_ocp_phy_write(sc, 0xA438, 0x020F);
+
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x80EA);
+	re_real_ocp_phy_write(sc, 0xA438, 0x7843);
+
+
+	re_set_phy_mcu_patch_request(sc);
+
+	re_clear_eth_ocp_phy_bit(sc, 0xB896, BIT_0);
+	re_clear_eth_ocp_phy_bit(sc, 0xB892, 0xFF00);
+
+
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC091);
+	re_real_ocp_phy_write(sc, 0xB890, 0x6E12);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC092);
+	re_real_ocp_phy_write(sc, 0xB890, 0x1214);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC094);
+	re_real_ocp_phy_write(sc, 0xB890, 0x1516);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC096);
+	re_real_ocp_phy_write(sc, 0xB890, 0x171B);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC098);
+	re_real_ocp_phy_write(sc, 0xB890, 0x1B1C);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC09A);
+	re_real_ocp_phy_write(sc, 0xB890, 0x1F1F);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC09C);
+	re_real_ocp_phy_write(sc, 0xB890, 0x2021);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC09E);
+	re_real_ocp_phy_write(sc, 0xB890, 0x2224);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC0A0);
+	re_real_ocp_phy_write(sc, 0xB890, 0x2424);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC0A2);
+	re_real_ocp_phy_write(sc, 0xB890, 0x2424);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC0A4);
+	re_real_ocp_phy_write(sc, 0xB890, 0x2424);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC018);
+	re_real_ocp_phy_write(sc, 0xB890, 0x0AF2);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC01A);
+	re_real_ocp_phy_write(sc, 0xB890, 0x0D4A);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC01C);
+	re_real_ocp_phy_write(sc, 0xB890, 0x0F26);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC01E);
+	re_real_ocp_phy_write(sc, 0xB890, 0x118D);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC020);
+	re_real_ocp_phy_write(sc, 0xB890, 0x14F3);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC022);
+	re_real_ocp_phy_write(sc, 0xB890, 0x175A);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC024);
+	re_real_ocp_phy_write(sc, 0xB890, 0x19C0);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC026);
+	re_real_ocp_phy_write(sc, 0xB890, 0x1C26);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC089);
+	re_real_ocp_phy_write(sc, 0xB890, 0x6050);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC08A);
+	re_real_ocp_phy_write(sc, 0xB890, 0x5F6E);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC08C);
+	re_real_ocp_phy_write(sc, 0xB890, 0x6E6E);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC08E);
+	re_real_ocp_phy_write(sc, 0xB890, 0x6E6E);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC090);
+	re_real_ocp_phy_write(sc, 0xB890, 0x6E12);
+
+	re_set_eth_ocp_phy_bit(sc, 0xB896, BIT_0);
+
+	re_clear_phy_mcu_patch_request(sc);
+
+
+	re_set_eth_ocp_phy_bit(sc, 0xD068, BIT_13);
+
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x81A2);
+	re_set_eth_ocp_phy_bit(sc, 0xA438, BIT_8);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB54C, 0xFF00, 0xDB00);
+
+
+	re_clear_eth_ocp_phy_bit(sc, 0xA454, BIT_0);
+
+
+	re_set_eth_ocp_phy_bit(sc, 0xA5D4, BIT_5);
+	re_clear_eth_ocp_phy_bit(sc, 0xAD4E, BIT_4);
+	re_clear_eth_ocp_phy_bit(sc, 0xA86A, BIT_0);
+
+
+	re_set_eth_ocp_phy_bit(sc, 0xA442, BIT_11);
+
+
+	if (sc->RequirePhyMdiSwapPatch) {
+		u_int16_t adccal_offset_p0;
+		u_int16_t adccal_offset_p1;
+		u_int16_t adccal_offset_p2;
+		u_int16_t adccal_offset_p3;
+		u_int16_t rg_lpf_cap_xg_p0;
+		u_int16_t rg_lpf_cap_xg_p1;
+		u_int16_t rg_lpf_cap_xg_p2;
+		u_int16_t rg_lpf_cap_xg_p3;
+		u_int16_t rg_lpf_cap_p0;
+		u_int16_t rg_lpf_cap_p1;
+		u_int16_t rg_lpf_cap_p2;
+		u_int16_t rg_lpf_cap_p3;
+
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD068, 0x0007, 0x0001);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD068, 0x0018, 0x0000);
+		adccal_offset_p0 = re_real_ocp_phy_read(sc, 0xD06A);
+		adccal_offset_p0 &= 0x07FF;
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD068, 0x0018, 0x0008);
+		adccal_offset_p1 = re_real_ocp_phy_read(sc, 0xD06A);
+		adccal_offset_p1 &= 0x07FF;
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD068, 0x0018, 0x0010);
+		adccal_offset_p2 = re_real_ocp_phy_read(sc, 0xD06A);
+		adccal_offset_p2 &= 0x07FF;
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD068, 0x0018, 0x0018);
+		adccal_offset_p3 = re_real_ocp_phy_read(sc, 0xD06A);
+		adccal_offset_p3 &= 0x07FF;
+
+
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD068, 0x0018, 0x0000);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD06A, 0x07FF, adccal_offset_p3);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD068, 0x0018, 0x0008);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD06A, 0x07FF, adccal_offset_p2);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD068, 0x0018, 0x0010);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD06A, 0x07FF, adccal_offset_p1);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD068, 0x0018, 0x0018);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xD06A, 0x07FF, adccal_offset_p0);
+
+		rg_lpf_cap_xg_p0 = re_real_ocp_phy_read(sc, 0xBD5A);
+		rg_lpf_cap_xg_p0 &= 0x001F;
+		rg_lpf_cap_xg_p1 = re_real_ocp_phy_read(sc, 0xBD5A);
+		rg_lpf_cap_xg_p1 &= 0x1F00;
+		rg_lpf_cap_xg_p2 = re_real_ocp_phy_read(sc, 0xBD5C);
+		rg_lpf_cap_xg_p2 &= 0x001F;
+		rg_lpf_cap_xg_p3 = re_real_ocp_phy_read(sc, 0xBD5C);
+		rg_lpf_cap_xg_p3 &= 0x1F00;
+		rg_lpf_cap_p0 = re_real_ocp_phy_read(sc, 0xBC18);
+		rg_lpf_cap_p0 &= 0x001F;
+		rg_lpf_cap_p1 = re_real_ocp_phy_read(sc, 0xBC18);
+		rg_lpf_cap_p1 &= 0x1F00;
+		rg_lpf_cap_p2 = re_real_ocp_phy_read(sc, 0xBC1A);
+		rg_lpf_cap_p2 &= 0x001F;
+		rg_lpf_cap_p3 = re_real_ocp_phy_read(sc, 0xBC1A);
+		rg_lpf_cap_p3 &= 0x1F00;
+
+		re_clear_set_eth_ocp_phy_bit(sc, 0xBD5A, 0x001F, rg_lpf_cap_xg_p3 >> 8);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xBD5A, 0x1F00, rg_lpf_cap_xg_p2 << 8);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xBD5C, 0x001F, rg_lpf_cap_xg_p1 >> 8);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xBD5C, 0x1F00, rg_lpf_cap_xg_p0 << 8);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xBC18, 0x001F, rg_lpf_cap_p3 >> 8);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xBC18, 0x1F00, rg_lpf_cap_p2 << 8);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xBC1A, 0x001F, rg_lpf_cap_p1 >> 8);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xBC1A, 0x1F00, rg_lpf_cap_p0 << 8);
+	}
+
+
+	re_set_eth_ocp_phy_bit(sc, 0xA424, BIT_3);
+
+	if (phy_power_saving == 1) {
+		re_set_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+	} else {
+		re_clear_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+		DELAY(20000);
+	}
+}
+
+/* MACFG_82 */
+void
+re_hw_phy_config_8125b_1(struct re_softc *sc, int phy_power_saving)
+{
+	re_set_eth_ocp_phy_bit(sc, 0xA442, BIT_11);
+
+	re_set_eth_ocp_phy_bit(sc, 0xBC08, (BIT_3 | BIT_2));
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x8FFF);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x0400);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8560);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x19CC);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8562);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x19CC);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8564);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x19CC);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8566);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x147D);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8568);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x147D);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x856A);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x147D);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FFE);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x0907);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xACDA, 0xFF00, 0xFF00);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xACDE, 0xF000, 0xF000);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x80D6);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x2801);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x80F2);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x2801);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x80F4);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x6077);
+	re_real_ocp_phy_write(sc, 0xB506, 0x01E7);
+	re_real_ocp_phy_write(sc, 0xAC8C, 0x0FFC);
+	re_real_ocp_phy_write(sc, 0xAC46, 0xB7B4);
+	re_real_ocp_phy_write(sc, 0xAC50, 0x0FBC);
+	re_real_ocp_phy_write(sc, 0xAC3C, 0x9240);
+	re_real_ocp_phy_write(sc, 0xAC4E, 0x0DB4);
+	re_real_ocp_phy_write(sc, 0xACC6, 0x0707);
+	re_real_ocp_phy_write(sc, 0xACC8, 0xA0D3);
+	re_real_ocp_phy_write(sc, 0xAD08, 0x0007);
+
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8013);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x0700);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FB9);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x2801);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FBA);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x0100);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FBC);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x1900);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FBE);
+	re_real_ocp_phy_write(sc, 0xB87E, 0xE100);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FC0);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x0800);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FC2);
+	re_real_ocp_phy_write(sc, 0xB87E, 0xE500);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FC4);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x0F00);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FC6);
+	re_real_ocp_phy_write(sc, 0xB87E, 0xF100);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FC8);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x0400);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FCa);
+	re_real_ocp_phy_write(sc, 0xB87E, 0xF300);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FCc);
+	re_real_ocp_phy_write(sc, 0xB87E, 0xFD00);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FCe);
+	re_real_ocp_phy_write(sc, 0xB87E, 0xFF00);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FD0);
+	re_real_ocp_phy_write(sc, 0xB87E, 0xFB00);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FD2);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x0100);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FD4);
+	re_real_ocp_phy_write(sc, 0xB87E, 0xF400);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FD6);
+	re_real_ocp_phy_write(sc, 0xB87E, 0xFF00);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8FD8);
+	re_real_ocp_phy_write(sc, 0xB87E, 0xF600);
+
+	re_real_ocp_phy_write(sc, 0xB87C, 0x813D);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x390E);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x814F);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x790E);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x80B0);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x0F31);
+	re_set_eth_ocp_phy_bit(sc, 0xBF4C, BIT_1);
+	re_set_eth_ocp_phy_bit(sc, 0xBCCA, (BIT_9 | BIT_8));
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8141);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x320E);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8153);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x720E);
+	re_clear_eth_ocp_phy_bit(sc, 0xA432, BIT_6);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8529);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x050E);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x816C);
+	re_real_ocp_phy_write(sc, 0xA438, 0xC4A0);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8170);
+	re_real_ocp_phy_write(sc, 0xA438, 0xC4A0);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8174);
+	re_real_ocp_phy_write(sc, 0xA438, 0x04A0);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8178);
+	re_real_ocp_phy_write(sc, 0xA438, 0x04A0);
+	re_real_ocp_phy_write(sc, 0xA436, 0x817C);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0719);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8FF4);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0400);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8FF1);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0404);
+	re_real_ocp_phy_write(sc, 0xBF4A, 0x001B);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8033);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x7C13);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8037);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x7C13);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x803B);
+	re_real_ocp_phy_write(sc, 0xB87E, 0xFC32);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x803F);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x7C13);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8043);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x7C13);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8047);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x7C13);
+
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8145);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x370E);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8157);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x770E);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8169);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x0D0A);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x817B);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x1D0A);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x8217);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x5000);
+	re_real_ocp_phy_write(sc, 0xA436, 0x821A);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x5000);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x80DA);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0403);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80DC);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x1000);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80B3);
+	re_real_ocp_phy_write(sc, 0xA438, 0x0384);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80B7);
+	re_real_ocp_phy_write(sc, 0xA438, 0x2007);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80BA);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x6C00);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80B5);
+	re_real_ocp_phy_write(sc, 0xA438, 0xF009);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80BD);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x9F00);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x80C7);
+	re_real_ocp_phy_write(sc, 0xA438, 0xf083);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80DD);
+	re_real_ocp_phy_write(sc, 0xA438, 0x03f0);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80DF);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x1000);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80CB);
+	re_real_ocp_phy_write(sc, 0xA438, 0x2007);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80CE);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x6C00);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80C9);
+	re_real_ocp_phy_write(sc, 0xA438, 0x8009);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80D1);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x8000);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x80A3);
+	re_real_ocp_phy_write(sc, 0xA438, 0x200A);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80A5);
+	re_real_ocp_phy_write(sc, 0xA438, 0xF0AD);
+	re_real_ocp_phy_write(sc, 0xA436, 0x809F);
+	re_real_ocp_phy_write(sc, 0xA438, 0x6073);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80A1);
+	re_real_ocp_phy_write(sc, 0xA438, 0x000B);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80A9);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0xC000);
+
+	re_set_phy_mcu_patch_request(sc);
+
+	re_clear_eth_ocp_phy_bit(sc, 0xB896, BIT_0);
+	re_clear_eth_ocp_phy_bit(sc, 0xB892, 0xFF00);
+
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC23E);
+	re_real_ocp_phy_write(sc, 0xB890, 0x0000);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC240);
+	re_real_ocp_phy_write(sc, 0xB890, 0x0103);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC242);
+	re_real_ocp_phy_write(sc, 0xB890, 0x0507);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC244);
+	re_real_ocp_phy_write(sc, 0xB890, 0x090B);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC246);
+	re_real_ocp_phy_write(sc, 0xB890, 0x0C0E);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC248);
+	re_real_ocp_phy_write(sc, 0xB890, 0x1012);
+	re_real_ocp_phy_write(sc, 0xB88E, 0xC24A);
+	re_real_ocp_phy_write(sc, 0xB890, 0x1416);
+
+	re_set_eth_ocp_phy_bit(sc, 0xB896, BIT_0);
+
+	re_clear_phy_mcu_patch_request(sc);
+
+
+	re_set_eth_ocp_phy_bit(sc, 0xA86A, BIT_0);
+	re_set_eth_ocp_phy_bit(sc, 0xA6F0, BIT_0);
+
+
+	re_real_ocp_phy_write(sc, 0xBFA0, 0xD70D);
+	re_real_ocp_phy_write(sc, 0xBFA2, 0x4100);
+	re_real_ocp_phy_write(sc, 0xBFA4, 0xE868);
+	re_real_ocp_phy_write(sc, 0xBFA6, 0xDC59);
+	re_real_ocp_phy_write(sc, 0xB54C, 0x3C18);
+	re_clear_eth_ocp_phy_bit(sc, 0xBFA4, BIT_5);
+	re_real_ocp_phy_write(sc, 0xA436, 0x817D);
+	re_set_eth_ocp_phy_bit(sc, 0xA438, BIT_12);
+
+
+	if (phy_power_saving == 1) {
+		re_set_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+	} else {
+		re_clear_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+		DELAY(20000);
+	}
+}
+
+/* MACFG_83 */
+void
+re_hw_phy_config_8125b_2(struct re_softc *sc, int phy_power_saving)
+{
+
+	re_set_eth_ocp_phy_bit(sc, 0xA442, BIT_11);
+
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAC46, 0x00F0, 0x0090);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD30, 0x0003, 0x0001);
+
+
+	re_real_ocp_phy_write(sc, 0xB87C, 0x80F5);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x760E);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8107);
+	re_real_ocp_phy_write(sc, 0xB87E, 0x360E);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8551);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB87E,
+	    BIT_15 | BIT_14 | BIT_13 | BIT_12 | BIT_11 | BIT_10 | BIT_9 | BIT_8,
+	    BIT_11);
+
+	re_clear_set_eth_ocp_phy_bit(sc, 0xbf00, 0xE000, 0xA000);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xbf46, 0x0F00, 0x0300);
+
+	re_real_ocp_phy_write(sc, 0xa436, 0x8044);
+	re_real_ocp_phy_write(sc, 0xa438, 0x2417);
+	re_real_ocp_phy_write(sc, 0xa436, 0x804A);
+	re_real_ocp_phy_write(sc, 0xa438, 0x2417);
+	re_real_ocp_phy_write(sc, 0xa436, 0x8050);
+	re_real_ocp_phy_write(sc, 0xa438, 0x2417);
+	re_real_ocp_phy_write(sc, 0xa436, 0x8056);
+	re_real_ocp_phy_write(sc, 0xa438, 0x2417);
+	re_real_ocp_phy_write(sc, 0xa436, 0x805C);
+	re_real_ocp_phy_write(sc, 0xa438, 0x2417);
+	re_real_ocp_phy_write(sc, 0xa436, 0x8062);
+	re_real_ocp_phy_write(sc, 0xa438, 0x2417);
+	re_real_ocp_phy_write(sc, 0xa436, 0x8068);
+	re_real_ocp_phy_write(sc, 0xa438, 0x2417);
+	re_real_ocp_phy_write(sc, 0xa436, 0x806E);
+	re_real_ocp_phy_write(sc, 0xa438, 0x2417);
+	re_real_ocp_phy_write(sc, 0xa436, 0x8074);
+	re_real_ocp_phy_write(sc, 0xa438, 0x2417);
+	re_real_ocp_phy_write(sc, 0xa436, 0x807A);
+	re_real_ocp_phy_write(sc, 0xa438, 0x2417);
+
+	re_set_eth_ocp_phy_bit(sc, 0xA4CA, BIT_6);
+	re_clear_eth_ocp_phy_bit(sc, 0xA4CA, BIT_14 | BIT_13);
+
+
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBF84,
+	    BIT_15 | BIT_14 | BIT_13,
+	    BIT_15 | BIT_13);
+
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x8170);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438,
+	    BIT_13 | BIT_10 | BIT_9 | BIT_8,
+	    BIT_15 | BIT_14 | BIT_12 | BIT_11);
+
+
+	re_set_eth_ocp_phy_bit(sc, 0xA424, BIT_3);
+/*
+	re_real_ocp_phy_write(sc, 0xBFA0, 0xD70D);
+	re_real_ocp_phy_write(sc, 0xBFA2, 0x4100);
+	re_real_ocp_phy_write(sc, 0xBFA4, 0xE868);
+	re_real_ocp_phy_write(sc, 0xBFA6, 0xDC59);
+	re_real_ocp_phy_write(sc, 0xB54C, 0x3C18);
+	re_clear_eth_ocp_phy_bit(sc, 0xBFA4, BIT_5);
+	re_real_ocp_phy_write(sc, 0xA436, 0x817D);
+	re_set_eth_ocp_phy_bit(sc, 0xA438, BIT_12);
+*/
+
+	if (phy_power_saving == 1) {
+		re_set_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+	} else {
+		re_clear_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+		DELAY(20000);
+	}
+}
+
+/* MACFG_84 */
+void
+re_hw_phy_config_8125bp_1(struct re_softc *sc, int phy_power_saving)
+{
+
+	re_set_eth_ocp_phy_bit(sc, 0xA442, BIT_11);
+
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA80C,
+	    BIT_14, BIT_15 | BIT_11 | BIT_10);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x8010);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_11);
+
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8088);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB87E, 0xFF00, 0x9000);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x808F);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB87E, 0xFF00, 0x9000);
+
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x8174);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, BIT_13, BIT_12 | BIT_11);
+
+	if (phy_power_saving == 1) {
+		re_set_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+	} else {
+		re_clear_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+		DELAY(20000);
+	}
+}
+
+/* MACFG_85 */
+void
+re_hw_phy_config_8125bp_2(struct re_softc *sc, int phy_power_saving)
+{
+
+	re_set_eth_ocp_phy_bit(sc, 0xA442, BIT_11);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x8010);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_11);
+
+
+	re_real_ocp_phy_write(sc, 0xB87C, 0x8088);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB87E, 0xFF00, 0x9000);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x808F);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB87E, 0xFF00, 0x9000);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x8174);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, BIT_13, BIT_12 | BIT_11);
+
+	if (phy_power_saving == 1) {
+		re_set_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+	} else {
+		re_clear_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+		DELAY(20000);
+	}
+}
+
+void
+re_hw_phy_config_8125d_1(struct re_softc *sc, int phy_power_saving)
+{
+
+	re_set_eth_ocp_phy_bit(sc, 0xA442, BIT_11);
+
+	re_set_phy_mcu_patch_request(sc);
+
+	re_set_eth_ocp_phy_bit(sc, 0xBF96, BIT_15);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBF94, 0x0007, 0x0005);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBF8E, 0x3C00, 0x2800);
+
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBCD8, 0xC000, 0x4000);
+	re_set_eth_ocp_phy_bit(sc, 0xBCD8, BIT_15 | BIT_14);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBCD8, 0xC000, 0x4000);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBC80, 0x001F, 0x0004);
+	re_set_eth_ocp_phy_bit(sc, 0xBC82, BIT_15 | BIT_14 | BIT_13);
+	re_set_eth_ocp_phy_bit(sc, 0xBC82, BIT_12 | BIT_11 | BIT_10);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBC80, 0x001F, 0x0005);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBC82, 0x00E0, 0x0040);
+	re_set_eth_ocp_phy_bit(sc, 0xBC82, BIT_4 | BIT_3 | BIT_2);
+	re_clear_eth_ocp_phy_bit(sc, 0xBCD8, BIT_15 | BIT_14);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBCD8, 0xC000, 0x8000);
+	re_clear_eth_ocp_phy_bit(sc, 0xBCD8, BIT_15 | BIT_14);
+
+	re_clear_phy_mcu_patch_request(sc);
+
+
+	re_real_ocp_phy_write(sc, 0xB87C, 0x832C);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB87E, 0xFF00, 0x0500);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB106, 0x0700, 0x0100);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB206, 0x0700, 0x0200);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB306, 0x0700, 0x0300);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x80CB);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB87E, 0xFF00, 0x0300);
+	re_real_ocp_phy_write(sc, 0xBCF4, 0x0000);
+	re_real_ocp_phy_write(sc, 0xBCF6, 0x0000);
+	re_real_ocp_phy_write(sc, 0xBC12, 0x0000);
+	re_real_ocp_phy_write(sc, 0xB87C, 0x844d);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xB87E, 0xFF00, 0x0200);
+	if (HW_HAS_WRITE_PHY_MCU_RAM_CODE(sc)) {
+		re_real_ocp_phy_write(sc, 0xB87C, 0x8feb);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xB87E, 0xFF00, 0x0100);
+		re_real_ocp_phy_write(sc, 0xB87C, 0x8fe9);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xB87E, 0xFF00, 0x0600);
+	}
+
+
+	re_clear_eth_ocp_phy_bit(sc, 0xAD40, BIT_5 | BIT_4);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD66, 0x000F, 0x0007);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD68, 0xF000, 0x8000);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD68, 0x0F00, 0x0500);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD68, 0x000F, 0x0002);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xAD6A, 0xF000, 0x7000);
+	re_real_ocp_phy_write(sc, 0xAC50, 0x01E8);
+
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x81FA);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x5400);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA864, 0x00F0, 0x00C0);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA42C, 0x00FF, 0x0002);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80E1);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x0F00);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80DE);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xF000, 0x0700);
+	re_set_eth_ocp_phy_bit(sc, 0xA846, BIT_7);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x80BA);
+	re_real_ocp_phy_write(sc, 0xA438, 0x8A04);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80BD);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0xCA00);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80B7);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0xB300);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x80CE);
+	re_real_ocp_phy_write(sc, 0xA438, 0x8A04);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80D1);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0xCA00);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80CB);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0xBB00);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x80A6);
+	re_real_ocp_phy_write(sc, 0xA438, 0x4909);
+	re_real_ocp_phy_write(sc, 0xA436, 0x80A8);
+	re_real_ocp_phy_write(sc, 0xA438, 0x05B8);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x8200);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x5800);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x8FF1);
+	re_real_ocp_phy_write(sc, 0xA438, 0x7078);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8FF3);
+	re_real_ocp_phy_write(sc, 0xA438, 0x5D78);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8FF5);
+	re_real_ocp_phy_write(sc, 0xA438, 0x7862);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8FF7);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x1400);
+
+	if (HW_HAS_WRITE_PHY_MCU_RAM_CODE(sc)) {
+		re_real_ocp_phy_write(sc, 0xA436, 0x814C);
+		re_real_ocp_phy_write(sc, 0xA438, 0x8455);
+		re_real_ocp_phy_write(sc, 0xA436, 0x814E);
+		re_real_ocp_phy_write(sc, 0xA438, 0x84A6);
+		re_real_ocp_phy_write(sc, 0xA436, 0x8163);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x0600);
+		re_real_ocp_phy_write(sc, 0xA436, 0x816A);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x0500);
+		re_real_ocp_phy_write(sc, 0xA436, 0x8171);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x1f00);
+	}
+
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBC3A, 0x000F, 0x0006);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8064);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_10 | BIT_9 | BIT_8);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8067);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_10 | BIT_9 | BIT_8);
+	re_real_ocp_phy_write(sc, 0xA436, 0x806A);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_10 | BIT_9 | BIT_8);
+	re_real_ocp_phy_write(sc, 0xA436, 0x806D);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_10 | BIT_9 | BIT_8);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8070);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_10 | BIT_9 | BIT_8);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8073);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_10 | BIT_9 | BIT_8);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8076);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_10 | BIT_9 | BIT_8);
+	re_real_ocp_phy_write(sc, 0xA436, 0x8079);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_10 | BIT_9 | BIT_8);
+	re_real_ocp_phy_write(sc, 0xA436, 0x807C);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_10 | BIT_9 | BIT_8);
+	re_real_ocp_phy_write(sc, 0xA436, 0x807F);
+	re_clear_eth_ocp_phy_bit(sc, 0xA438, BIT_10 | BIT_9 | BIT_8);
+
+	re_clear_set_eth_ocp_phy_bit(sc, 0xBFA0, 0xFF70, 0x5500);
+	re_real_ocp_phy_write(sc, 0xBFA2, 0x9D00);
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x8165);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0x0700, 0x0200);
+
+	if (HW_HAS_WRITE_PHY_MCU_RAM_CODE(sc)) {
+		re_real_ocp_phy_write(sc, 0xA436, 0x8019);
+		re_set_eth_ocp_phy_bit(sc, 0xA438, BIT_8);
+		re_real_ocp_phy_write(sc, 0xA436, 0x8FE3);
+		re_real_ocp_phy_write(sc, 0xA438, 0x0005);
+		re_real_ocp_phy_write(sc, 0xA438, 0x0000);
+		re_real_ocp_phy_write(sc, 0xA438, 0x00ED);
+		re_real_ocp_phy_write(sc, 0xA438, 0x0502);
+		re_real_ocp_phy_write(sc, 0xA438, 0x0B00);
+		re_real_ocp_phy_write(sc, 0xA438, 0xD401);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x2900);
+	}
+
+	re_real_ocp_phy_write(sc, 0xA436, 0x8018);
+	re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x1700);
+
+
+	if (HW_HAS_WRITE_PHY_MCU_RAM_CODE(sc)) {
+		re_real_ocp_phy_write(sc, 0xA436, 0x815B);
+		re_clear_set_eth_ocp_phy_bit(sc, 0xA438, 0xFF00, 0x1700);
+	}
+
+	re_clear_eth_ocp_phy_bit(sc, 0xA4E0, BIT_15);
+
+	re_set_eth_ocp_phy_bit(sc, 0xA430, BIT_12 | BIT_0);
+	re_set_eth_ocp_phy_bit(sc, 0xA442, BIT_7);
+
+	if (phy_power_saving == 1) {
+		re_set_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+	} else {
+		re_clear_eth_ocp_phy_bit(sc, 0xA430, BIT_2);
+		DELAY(20000);
+	}
+}
+
 void
 re_hw_phy_config_8125d_2(struct re_softc *sc, int phy_power_saving)
 {
