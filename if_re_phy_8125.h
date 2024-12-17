@@ -61,6 +61,20 @@ extern	void re_set_phy_mcu_8125bp_1(struct re_softc *sc);
 
 extern	void re_exit_oob_phy_8125(struct re_softc *sc);
 
+extern	void re_hw_phy_config_8125a_1(struct re_softc *sc,
+	    int phy_power_saving);
+extern	void re_hw_phy_config_8125a_2(struct re_softc *sc,
+	    int phy_power_saving);
+extern	void re_hw_phy_config_8125b_1(struct re_softc *sc,
+	    int phy_power_saving);
+extern	void re_hw_phy_config_8125b_2(struct re_softc *sc,
+	    int phy_power_saving);
+extern	void re_hw_phy_config_8125bp_1(struct re_softc *sc,
+	    int phy_power_saving);
+extern	void re_hw_phy_config_8125bp_2(struct re_softc *sc,
+	    int phy_power_saving);
+extern	void re_hw_phy_config_8125d_1(struct re_softc *sc,
+	    int phy_power_saving);
 extern	void re_hw_phy_config_8125d_2(struct re_softc *sc,
 	    int phy_power_saving);
 
