@@ -129,6 +129,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_ocp.h"
 #include "if_re_cfg.h"
 #include "if_re_csi.h"
+#include "if_re_dash.h"
 #include "if_re_mac_mcu.h"
 #include "if_re_phy_mcu.h"
 
@@ -211,8 +212,6 @@ static int	re_shutdown			__P((device_t));
 
 static void re_ephy_write			__P((struct re_softc*, u_int8_t, u_int16_t));
 static u_int16_t re_ephy_read		__P((struct re_softc*, u_int8_t));
-
-static int re_check_dash  __P((struct re_softc *));
 
 static void re_driver_start             __P((struct re_softc*));
 static void re_driver_stop         	__P((struct re_softc*));
@@ -15770,130 +15769,6 @@ static void OOB_mutex_unlock(struct re_softc *sc)
 
         re_ocp_write(sc, ocp_reg_mutex_prio, 1, BIT_0);
         re_ocp_write(sc, ocp_reg_mutex_ib, 1, 0x00);
-}
-
-static u_int32_t re_get_dash_fw_ver(struct re_softc *sc)
-{
-        if (HW_DASH_SUPPORT_GET_FIRMWARE_VERSION(sc))
-                return re_ocp_read(sc, OCP_REG_FIRMWARE_MAJOR_VERSION, 4);
-        else
-                return 0xffffffff;
-}
-
-static int _re_check_dash(struct re_softc *sc)
-{
-        if (HW_DASH_SUPPORT_DASH(sc) == FALSE)
-                return 0;
-
-        if (!sc->AllowAccessDashOcp)
-                return 0;
-
-        if (HW_DASH_SUPPORT_TYPE_2(sc) || HW_DASH_SUPPORT_TYPE_3(sc) ||
-            HW_DASH_SUPPORT_TYPE_4(sc)) {
-                return !!(re_ocp_read(sc, 0x128, 1) & BIT_0);
-        } else if (HW_DASH_SUPPORT_TYPE_1(sc)) {
-                if (sc->re_type == MACFG_66)
-                        return !!(re_ocp_read(sc, 0xb8, 2) & BIT_15);
-                else
-                        return !!(re_ocp_read(sc, 0x10, 2) & BIT_15);
-        }
-
-        return 0;
-}
-
-static int re_check_dash(struct re_softc *sc)
-{
-        if (_re_check_dash(sc)) {
-                u_int32_t ver = re_get_dash_fw_ver(sc);
-                sc->re_dash_fw_ver = ver;
-                if (!(ver == 0 || ver == 0xffffffff))
-                        return 1;
-        }
-
-        return 0;
-}
-
-static void re_wait_dash_fw_ready(struct re_softc *sc)
-{
-        int timeout;
-
-        if (!HW_DASH_SUPPORT_DASH(sc))
-                return;
-
-        if (!sc->re_dash)
-                return;
-
-        if (HW_DASH_SUPPORT_TYPE_2(sc) || HW_DASH_SUPPORT_TYPE_3(sc) ||
-            HW_DASH_SUPPORT_TYPE_4(sc)) {
-                for (timeout = 0; timeout < 10; timeout++) {
-                        DELAY(10000);
-                        if (re_ocp_read(sc, 0x124, 1) & BIT_0)
-                                break;
-                }
-        } else {
-                u_int32_t reg;
-
-                if (sc->re_type == MACFG_66)
-                        reg = 0xB8;
-                else
-                        reg = 0x10;
-
-                for (timeout = 0; timeout < 10; timeout++) {
-                        DELAY(10000);
-                        if (re_ocp_read(sc, reg, 2) & BIT_11)
-                                break;
-                }
-        }
-}
-
-static void re_notify_dash_oob_dp(struct re_softc *sc, u_int32_t cmd)
-{
-        if (!HW_DASH_SUPPORT_TYPE_1(sc))
-                return;
-
-        if (sc->re_type == MACFG_66 && cmd == OOB_CMD_DRIVER_START)
-                CSR_WRITE_1(sc, RE_TwiCmdReg, CSR_READ_1(sc, RE_TwiCmdReg) | BIT_7);
-
-        re_eri_write(sc, 0xE8, 1, (u_int8_t)cmd, ERIAR_ExGMAC);
-
-        re_ocp_write(sc, 0x30, 1, 0x01);
-
-        if (sc->re_type == MACFG_66 && cmd == OOB_CMD_DRIVER_STOP)
-                CSR_WRITE_1(sc, RE_TwiCmdReg, CSR_READ_1(sc, RE_TwiCmdReg) & ~BIT_7);
-}
-
-static void re_notify_dash_oob_cmac(struct re_softc *sc, u_int32_t cmd)
-{
-        if (!HW_DASH_SUPPORT_CMAC(sc))
-                return;
-
-        re_ocp_write(sc, 0x180, 1, cmd);
-        re_ocp_write(sc, 0x30, 1, re_ocp_read(sc, 0x30, 1) | BIT_0);
-}
-
-static void re_notify_dash_oob_ipc2(struct re_softc *sc, u_int32_t cmd)
-{
-        if (!HW_DASH_SUPPORT_IPC2(sc))
-                return;
-
-        re_ocp_write(sc, RE_IB2SOC_DATA, 4, cmd);
-        re_ocp_write(sc, RE_IB2SOC_CMD, 4, 0x00);
-        re_ocp_write(sc, RE_IB2SOC_SET, 4, 0x01);
-}
-
-static void re_notify_dash_oob(struct re_softc *sc, u_int32_t cmd)
-{
-        switch (sc->HwSuppDashVer) {
-        case 1:
-                return re_notify_dash_oob_dp(sc, cmd);
-        case 2:
-        case 3:
-                return re_notify_dash_oob_cmac(sc, cmd);
-        case 4:
-                return re_notify_dash_oob_ipc2(sc, cmd);
-        default:
-                return;
-        }
 }
 
 void re_driver_start(struct re_softc *sc)
