@@ -56,4 +56,16 @@ extern	void re_set_phy_mcu_8168h_3(struct re_softc *sc);
 extern	void re_set_phy_mcu_8168ep_1(struct re_softc *sc);
 extern	void re_set_phy_mcu_8168ep_2(struct re_softc *sc);
 
+extern	void re_hw_phy_config_8168h_1(struct re_softc *sc,
+	    bool phy_power_saving);
+extern	void re_hw_phy_config_8168h_2(struct re_softc *sc,
+	    bool phy_power_saving);
+extern	void re_hw_phy_config_8168fp_1(struct re_softc *sc,
+	    bool phy_power_saving);
+extern	void re_hw_phy_config_8168h_3(struct re_softc *sc,
+	    bool phy_power_saving);
+extern	void re_hw_phy_config_8168h_4(struct re_softc *sc,
+	    bool phy_power_saving);
+
+
 #endif	/* __IF_RE_PHY_8168_H__ */
