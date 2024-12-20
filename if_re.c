@@ -148,6 +148,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_mac_8411.h"
 #include "if_re_phy_8411.h"
 
+#include "if_re_phy_macfg63.h"
 #include "if_re_phy_macfg64.h"
 #include "if_re_phy_macfg65.h"
 #include "if_re_phy_macfg66.h"
@@ -13527,68 +13528,7 @@ static void re_hw_phy_config(struct re_softc *sc)
                 re_mdio_write(sc, 0x1F, 0x0000);
                 re_mdio_write(sc, 0x00, 0x9200);
         } else if (sc->re_type == MACFG_63) {
-                re_mdio_write(sc, 0x1f, 0x0002);
-                re_mdio_write(sc, 0x10, 0x0008);
-                re_mdio_write(sc, 0x0d, 0x006c);
-                re_mdio_write(sc, 0x1f, 0x0000);
-
-                re_mdio_write(sc, 0x1f, 0x0001);
-                re_mdio_write(sc, 0x17, 0x0cc0);
-                re_mdio_write(sc, 0x1f, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0001);
-                re_mdio_write(sc, 0x0B, 0xA4D8);
-                re_mdio_write(sc, 0x09, 0x281C);
-                re_mdio_write(sc, 0x07, 0x2883);
-                re_mdio_write(sc, 0x0A, 0x6B35);
-                re_mdio_write(sc, 0x1D, 0x3DA4);
-                re_mdio_write(sc, 0x1C, 0xEFFD);
-                re_mdio_write(sc, 0x14, 0x7F52);
-                re_mdio_write(sc, 0x18, 0x7FC6);
-                re_mdio_write(sc, 0x08, 0x0601);
-                re_mdio_write(sc, 0x06, 0x4063);
-                re_mdio_write(sc, 0x10, 0xF074);
-                re_mdio_write(sc, 0x1F, 0x0003);
-                re_mdio_write(sc, 0x13, 0x0789);
-                re_mdio_write(sc, 0x12, 0xF4BD);
-                re_mdio_write(sc, 0x1A, 0x04FD);
-                re_mdio_write(sc, 0x14, 0x84B0);
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0005);
-                re_mdio_write(sc, 0x01, 0x0340);
-                re_mdio_write(sc, 0x1F, 0x0001);
-                re_mdio_write(sc, 0x04, 0x4000);
-                re_mdio_write(sc, 0x03, 0x1D21);
-                re_mdio_write(sc, 0x02, 0x0C32);
-                re_mdio_write(sc, 0x01, 0x0200);
-                re_mdio_write(sc, 0x00, 0x5554);
-                re_mdio_write(sc, 0x04, 0x4800);
-                re_mdio_write(sc, 0x04, 0x4000);
-                re_mdio_write(sc, 0x04, 0xF000);
-                re_mdio_write(sc, 0x03, 0xDF01);
-                re_mdio_write(sc, 0x02, 0xDF20);
-                re_mdio_write(sc, 0x01, 0x101A);
-                re_mdio_write(sc, 0x00, 0xA0FF);
-                re_mdio_write(sc, 0x04, 0xF800);
-                re_mdio_write(sc, 0x04, 0xF000);
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0007);
-                re_mdio_write(sc, 0x1E, 0x0023);
-                re_mdio_write(sc, 0x16, 0x0000);
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0000);
-                PhyRegValue = re_mdio_read(sc, 0x0D);
-                PhyRegValue |= (BIT_5);
-                re_mdio_write(sc, 0x0D, PhyRegValue);
-
-                re_mdio_write(sc, 0x1F, 0x0002);
-                PhyRegValue = re_mdio_read(sc, 0x0C);
-                PhyRegValue |= (BIT_10);
-                re_mdio_write(sc, 0x0C, PhyRegValue);
-                re_mdio_write(sc, 0x1F, 0x0000);
+                re_hw_phy_config_macfg63(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_64) {
                 re_hw_phy_config_macfg64(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_65) {
