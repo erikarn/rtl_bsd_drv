@@ -1,11 +1,11 @@
 .depend.*.o
+*.o
 bus_if.h
 device_if.h
 export_syms
 fix.sh
 i386
 if_re.ko
-if_re.o
 machine
 opt_bdg.h
 opt_global.h
