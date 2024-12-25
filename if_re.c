@@ -148,6 +148,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_mac_8411.h"
 #include "if_re_phy_8411.h"
 
+#include "if_re_phy_macfg41.h"
 #include "if_re_phy_macfg42.h"
 #include "if_re_phy_macfg50.h"
 #include "if_re_phy_macfg51.h"
@@ -9430,7 +9431,6 @@ static void re_hw_phy_config(struct re_softc *sc)
 {
         u_int16_t Data;
         u_int32_t Data_u32;
-        int i;
 
         switch (sc->re_type) {
         case MACFG_59:
@@ -11019,20 +11019,7 @@ static void re_hw_phy_config(struct re_softc *sc)
                 re_mdio_write(sc, 0x10, Data);
                 re_mdio_write(sc, 0x1f, 0x0000);
         } else if (sc->re_type == MACFG_41) {
-                re_mdio_write(sc, 0x1F, 0x0000);
-                re_mdio_write(sc, 0x11, re_mdio_read(sc, 0x11) | 0x1000);
-                re_mdio_write(sc, 0x1F, 0x0002);
-                re_mdio_write(sc, 0x0F, re_mdio_read(sc, 0x0F) | 0x0003);
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                for (Data_u32=0x800E0068; Data_u32<0x800E006D; Data_u32++) {
-                        CSR_WRITE_4(sc, 0xF8, Data_u32);
-                        for (i=0; i<10; i++) {
-                                DELAY(400);
-                                if ((CSR_READ_4(sc, 0xF8)&0x80000000)==0)
-                                        break;
-                        }
-                }
+                re_hw_phy_config_macfg41(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_42 || sc->re_type == MACFG_43) {
                 re_hw_phy_config_macfg42(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_50) {
