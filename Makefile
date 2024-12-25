@@ -27,6 +27,7 @@ SRCS	= if_re.c if_re_eeprom.c if_re_mdio.c if_re_ocp.c if_re_eri.c \
 	  if_re_phy_8169.c \
 	  if_re_mac_8411.c \
 	  if_re_phy_8411.c \
+	  if_re_phy_macfg42.c \
 	  if_re_phy_macfg50.c \
 	  if_re_phy_macfg51.c \
 	  if_re_phy_macfg52.c \
