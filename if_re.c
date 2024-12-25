@@ -148,6 +148,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_mac_8411.h"
 #include "if_re_phy_8411.h"
 
+#include "if_re_phy_macfg61.h"
 #include "if_re_phy_macfg62.h"
 #include "if_re_phy_macfg63.h"
 #include "if_re_phy_macfg64.h"
@@ -13300,58 +13301,7 @@ static void re_hw_phy_config(struct re_softc *sc)
                 re_mdio_write(sc, 0x1F, 0x0000);
                 re_mdio_write(sc, 0x00, 0x9200);
         } else if (sc->re_type == MACFG_61) {
-                re_mdio_write(sc, 0x1F, 0x0A44);
-                re_set_eth_phy_bit(sc, 0x11, (BIT_3 | BIT_2));
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-
-                re_mdio_write(sc, 0x1F, 0x0BCC);
-                re_clear_eth_phy_bit(sc, 0x14, BIT_8);
-                re_mdio_write(sc, 0x1F, 0x0A44);
-                re_set_eth_phy_bit(sc, 0x11, BIT_7);
-                re_set_eth_phy_bit(sc, 0x11, BIT_6);
-                re_mdio_write(sc, 0x1F, 0x0A43);
-                re_mdio_write(sc, 0x13, 0x8084);
-                re_clear_eth_phy_bit(sc, 0x14, (BIT_14 | BIT_13));
-                re_set_eth_phy_bit(sc, 0x10, BIT_12);
-                re_set_eth_phy_bit(sc, 0x10, BIT_1);
-                re_set_eth_phy_bit(sc, 0x10, BIT_0);
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0A4B);
-                re_set_eth_phy_bit(sc, 0x11, BIT_2);
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0A43);
-                re_mdio_write(sc, 0x13, 0x8012);
-                re_set_eth_phy_bit(sc, 0x14, BIT_15);
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0C42);
-                re_clear_set_eth_phy_bit(sc,
-                                         0x11,
-                                         BIT_13,
-                                         BIT_14
-                                        );
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                if (phy_power_saving == 1) {
-                        re_mdio_write(sc, 0x1F, 0x0A43);
-                        re_set_eth_phy_bit(sc, 0x10, BIT_2);
-                        re_mdio_write(sc, 0x1F, 0x0000);
-                } else {
-                        re_mdio_write(sc, 0x1F, 0x0A43);
-                        re_clear_eth_phy_bit(sc, 0x10, BIT_2);
-                        re_mdio_write(sc, 0x1F, 0x0000);
-                        DELAY(20000);
-                }
-
-                re_mdio_write(sc, 0x1F, 0x0A43);
-                re_mdio_write(sc, 0x13, 0x8011);
-                re_clear_eth_phy_bit(sc, 0x14, BIT_14);
-                re_mdio_write(sc, 0x1F, 0x0A40);
-                re_mdio_write(sc, 0x1F, 0x0000);
-                re_mdio_write(sc, 0x00, 0x9200);
+                re_hw_phy_config_macfg61(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_62 || sc->re_type == MACFG_67) {
                 re_hw_phy_config_macfg62(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_63) {
