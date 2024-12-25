@@ -148,6 +148,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_mac_8411.h"
 #include "if_re_phy_8411.h"
 
+#include "if_re_phy_macfg32.h"
 #include "if_re_phy_macfg33.h"
 #include "if_re_phy_macfg36.h"
 #include "if_re_phy_macfg38.h"
@@ -10214,97 +10215,7 @@ static void re_hw_phy_config(struct re_softc *sc)
                 re_mdio_write(sc, 0x0D, 0xF880);
                 re_mdio_write(sc, 0x1F, 0x0000);
         } else if (sc->re_type == MACFG_32) {
-                re_mdio_write(sc, 0x1F, 0x0001);
-                re_mdio_write(sc, 0x06, 0x4064);
-                re_mdio_write(sc, 0x07, 0x2863);
-                re_mdio_write(sc, 0x08, 0x059C);
-                re_mdio_write(sc, 0x09, 0x26B4);
-                re_mdio_write(sc, 0x0A, 0x6A19);
-                re_mdio_write(sc, 0x0B, 0xBCC0);
-                re_mdio_write(sc, 0x10, 0xF06D);
-                re_mdio_write(sc, 0x14, 0x7F68);
-                re_mdio_write(sc, 0x18, 0x7FD9);
-                re_mdio_write(sc, 0x1C, 0xF0FF);
-                re_mdio_write(sc, 0x1D, 0x3D9C);
-                re_mdio_write(sc, 0x1F, 0x0003);
-                re_mdio_write(sc, 0x12, 0xF49F);
-                re_mdio_write(sc, 0x13, 0x070B);
-                re_mdio_write(sc, 0x1A, 0x05AD);
-                re_mdio_write(sc, 0x14, 0x94C0);
-
-                re_mdio_write(sc, 0x1F, 0x0002);
-                re_mdio_write(sc, 0x06, 0x5571);
-
-                re_mdio_write(sc, 0x1F, 0x0002);
-                re_mdio_write(sc, 0x05, 0x2642);
-
-                re_mdio_write(sc, 0x1F, 0x0002);
-                re_mdio_write(sc, 0x02, 0xC107);
-                re_mdio_write(sc, 0x03, 0x1002);
-
-                re_mdio_write(sc, 0x1F, 0x0001);
-                re_mdio_write(sc, 0x16, 0x0CC0);
-
-                re_mdio_write(sc, 0x1F, 0x0002);
-                re_mdio_write(sc, 0x0F, 0x0017);
-
-                re_mdio_write(sc, 0x1F, 0x0005);
-                re_mdio_write(sc, 0x05, 0x8200);
-                re_mdio_write(sc, 0x06, 0xF8F9);
-                re_mdio_write(sc, 0x06, 0xFAEF);
-                re_mdio_write(sc, 0x06, 0x59EE);
-                re_mdio_write(sc, 0x06, 0xF8EA);
-                re_mdio_write(sc, 0x06, 0x00EE);
-                re_mdio_write(sc, 0x06, 0xF8EB);
-                re_mdio_write(sc, 0x06, 0x00E0);
-                re_mdio_write(sc, 0x06, 0xF87C);
-                re_mdio_write(sc, 0x06, 0xE1F8);
-                re_mdio_write(sc, 0x06, 0x7D59);
-                re_mdio_write(sc, 0x06, 0x0FEF);
-                re_mdio_write(sc, 0x06, 0x0139);
-                re_mdio_write(sc, 0x06, 0x029E);
-                re_mdio_write(sc, 0x06, 0x06EF);
-                re_mdio_write(sc, 0x06, 0x1039);
-                re_mdio_write(sc, 0x06, 0x089F);
-                re_mdio_write(sc, 0x06, 0x2AEE);
-                re_mdio_write(sc, 0x06, 0xF8EA);
-                re_mdio_write(sc, 0x06, 0x00EE);
-                re_mdio_write(sc, 0x06, 0xF8EB);
-                re_mdio_write(sc, 0x06, 0x01E0);
-                re_mdio_write(sc, 0x06, 0xF87C);
-                re_mdio_write(sc, 0x06, 0xE1F8);
-                re_mdio_write(sc, 0x06, 0x7D58);
-                re_mdio_write(sc, 0x06, 0x409E);
-                re_mdio_write(sc, 0x06, 0x0F39);
-                re_mdio_write(sc, 0x06, 0x46AA);
-                re_mdio_write(sc, 0x06, 0x0BBF);
-                re_mdio_write(sc, 0x06, 0x8251);
-                re_mdio_write(sc, 0x06, 0xD682);
-                re_mdio_write(sc, 0x06, 0x5902);
-                re_mdio_write(sc, 0x06, 0x014F);
-                re_mdio_write(sc, 0x06, 0xAE09);
-                re_mdio_write(sc, 0x06, 0xBF82);
-                re_mdio_write(sc, 0x06, 0x59D6);
-                re_mdio_write(sc, 0x06, 0x8261);
-                re_mdio_write(sc, 0x06, 0x0201);
-                re_mdio_write(sc, 0x06, 0x4FEF);
-                re_mdio_write(sc, 0x06, 0x95FE);
-                re_mdio_write(sc, 0x06, 0xFDFC);
-                re_mdio_write(sc, 0x06, 0x054D);
-                re_mdio_write(sc, 0x06, 0x2000);
-                re_mdio_write(sc, 0x06, 0x024E);
-                re_mdio_write(sc, 0x06, 0x2200);
-                re_mdio_write(sc, 0x06, 0x024D);
-                re_mdio_write(sc, 0x06, 0xDFFF);
-                re_mdio_write(sc, 0x06, 0x014E);
-                re_mdio_write(sc, 0x06, 0xDDFF);
-                re_mdio_write(sc, 0x06, 0x0100);
-                re_mdio_write(sc, 0x02, 0x6010);
-                re_mdio_write(sc, 0x05, 0xFFF6);
-                re_mdio_write(sc, 0x06, 0x00EC);
-                re_mdio_write(sc, 0x05, 0x83D4);
-                re_mdio_write(sc, 0x06, 0x8200);
-
+                re_hw_phy_config_macfg32(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_33) {
                 re_hw_phy_config_macfg33(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_36 || sc->re_type == MACFG_37) {
