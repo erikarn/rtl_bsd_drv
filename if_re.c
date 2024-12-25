@@ -13143,7 +13143,7 @@ static void re_hw_phy_config(struct re_softc *sc)
                 re_mdio_write(sc, 0x1F, 0x0000);
                 re_mdio_write(sc, 0x00, 0x9200);
         } else if (sc->re_type == MACFG_60) {
-                re_hw_phy_config_macfg61(sc, phy_power_saving);
+                re_hw_phy_config_macfg60(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_61) {
                 re_hw_phy_config_macfg61(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_62 || sc->re_type == MACFG_67) {
