@@ -148,6 +148,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_mac_8411.h"
 #include "if_re_phy_8411.h"
 
+#include "if_re_phy_macfg50.h"
 #include "if_re_phy_macfg51.h"
 #include "if_re_phy_macfg52.h"
 #include "if_re_phy_macfg53.h"
@@ -11611,112 +11612,7 @@ static void re_hw_phy_config(struct re_softc *sc)
                 re_mdio_write(sc, 0x0D, 0x0000);
 
         } else if (sc->re_type == MACFG_50) {
-                re_mdio_write(sc, 0x1F, 0x0005);
-                re_mdio_write(sc, 0x05, 0x8B80);
-                Data = re_mdio_read(sc, 0x06);
-                Data |= BIT_2 | BIT_1;
-                re_mdio_write(sc, 0x06, Data);
-                re_mdio_write(sc, 0x1f, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0007);
-                re_mdio_write(sc, 0x1E, 0x002D);
-                Data = re_mdio_read(sc, 0x18);
-                Data |= BIT_4;
-                re_mdio_write(sc, 0x18, Data);
-                re_mdio_write(sc, 0x1f, 0x0000);
-                Data = re_mdio_read(sc, 0x14);
-                Data |= BIT_15;
-                re_mdio_write(sc, 0x14, Data);
-
-                re_mdio_write(sc, 0x1F, 0x0005);
-                re_mdio_write(sc, 0x05, 0x8B86);
-                Data = re_mdio_read(sc, 0x06);
-                Data |= BIT_0;
-                re_mdio_write(sc, 0x06, Data);
-                re_mdio_write(sc, 0x1f, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0005);
-                re_mdio_write(sc, 0x05, 0x8B85);
-                Data = re_mdio_read(sc, 0x06);
-                Data |= BIT_14;
-                re_mdio_write(sc, 0x06, Data);
-                re_mdio_write(sc, 0x1f, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0003);
-                re_mdio_write(sc, 0x09, 0xA20F);
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0005);
-                re_mdio_write(sc, 0x05, 0x8B55);
-                re_mdio_write(sc, 0x06, 0x0000);
-                re_mdio_write(sc, 0x05, 0x8B5E);
-                re_mdio_write(sc, 0x06, 0x0000);
-                re_mdio_write(sc, 0x05, 0x8B67);
-                re_mdio_write(sc, 0x06, 0x0000);
-                re_mdio_write(sc, 0x05, 0x8B70);
-                re_mdio_write(sc, 0x06, 0x0000);
-                re_mdio_write(sc, 0x1f, 0x0000);
-                re_mdio_write(sc, 0x1F, 0x0007);
-                re_mdio_write(sc, 0x1E, 0x0078);
-                re_mdio_write(sc, 0x17, 0x0000);
-                re_mdio_write(sc, 0x19, 0x00FB);
-                re_mdio_write(sc, 0x1f, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0005);
-                re_mdio_write(sc, 0x05, 0x8B79);
-                re_mdio_write(sc, 0x06, 0xAA00);
-                re_mdio_write(sc, 0x1f, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0003);
-                re_mdio_write(sc, 0x01, 0x328A);
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0005);
-                re_mdio_write(sc, 0x05, 0x8B54);
-                Data = re_mdio_read(sc, 0x06);
-                Data &= ~BIT_11;
-                re_mdio_write(sc, 0x06, Data);
-                re_mdio_write(sc, 0x05, 0x8B5D);
-                Data = re_mdio_read(sc, 0x06);
-                Data &= ~BIT_11;
-                re_mdio_write(sc, 0x06, Data);
-                re_mdio_write(sc, 0x05, 0x8A7C);
-                Data = re_mdio_read(sc, 0x06);
-                Data &= ~BIT_8;
-                re_mdio_write(sc, 0x06, Data);
-                re_mdio_write(sc, 0x05, 0x8A7F);
-                Data = re_mdio_read(sc, 0x06);
-                Data |= BIT_8;
-                re_mdio_write(sc, 0x06, Data);
-                re_mdio_write(sc, 0x05, 0x8A82);
-                Data = re_mdio_read(sc, 0x06);
-                Data &= ~BIT_8;
-                re_mdio_write(sc, 0x06, Data);
-                re_mdio_write(sc, 0x05, 0x8A85);
-                Data = re_mdio_read(sc, 0x06);
-                Data &= ~BIT_8;
-                re_mdio_write(sc, 0x06, Data);
-                re_mdio_write(sc, 0x05, 0x8A88);
-                Data = re_mdio_read(sc, 0x06);
-                Data &= ~BIT_8;
-                re_mdio_write(sc, 0x06, Data);
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0005);
-                re_mdio_write(sc, 0x05, 0x8B85);
-                Data = re_mdio_read(sc, 0x06);
-                Data |= BIT_15;
-                re_mdio_write(sc, 0x06, Data);
-                re_mdio_write(sc, 0x1f, 0x0000);
-
-                re_mdio_write(sc, 0x1f, 0x0003);
-                Data = re_mdio_read(sc, 0x19);
-                Data &= ~BIT_0;
-                re_mdio_write(sc, 0x19, Data);
-                Data = re_mdio_read(sc, 0x10);
-                Data &= ~BIT_10;
-                re_mdio_write(sc, 0x10, Data);
-                re_mdio_write(sc, 0x1f, 0x0000);
+                re_hw_phy_config_macfg50(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_51) {
                 re_hw_phy_config_macfg51(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_52) {
