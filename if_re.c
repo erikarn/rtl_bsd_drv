@@ -148,6 +148,10 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_mac_8411.h"
 #include "if_re_phy_8411.h"
 
+#include "if_re_phy_macfg17.h"
+#include "if_re_phy_macfg21.h"
+#include "if_re_phy_macfg22.h"
+#include "if_re_phy_macfg23.h"
 #include "if_re_phy_macfg24.h"
 #include "if_re_phy_macfg25.h"
 #include "if_re_phy_macfg26.h"
@@ -9548,34 +9552,13 @@ static void re_hw_phy_config(struct re_softc *sc)
                 re_mdio_write(sc, 0x08, 0x441D);
                 re_mdio_write(sc, 0x01, 0x9100);
         } else if (sc->re_type == MACFG_17) {
-                re_mdio_write(sc, 0x1f, 0x0000);
-                re_mdio_write(sc, 0x11, re_mdio_read(sc, 0x11) | 0x1000);
-                re_mdio_write(sc, 0x19, re_mdio_read(sc, 0x19) | 0x2000);
-                re_mdio_write(sc, 0x10, re_mdio_read(sc, 0x10) | 0x8000);
-
-                re_mdio_write(sc, 0x1f, 0x0003);
-                re_mdio_write(sc, 0x08, 0x441D);
-
-                re_mdio_write(sc, 0x1f, 0x0000);
+                re_hw_phy_config_macfg17(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_21) {
-                re_mdio_write(sc, 0x1F, 0x0001);
-                re_mdio_write(sc, 0x0B, 0x94B0);
-
-                re_mdio_write(sc, 0x1F, 0x0003);
-                re_mdio_write(sc, 0x12, 0x6096);
-                re_mdio_write(sc, 0x1F, 0x0000);
+                re_hw_phy_config_macfg21(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_22) {
-                re_mdio_write(sc, 0x1F, 0x0001);
-                re_mdio_write(sc, 0x0B, 0x94B0);
-
-                re_mdio_write(sc, 0x1F, 0x0003);
-                re_mdio_write(sc, 0x12, 0x6096);
+                re_hw_phy_config_macfg22(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_23) {
-                re_mdio_write(sc, 0x1F, 0x0001);
-                re_mdio_write(sc, 0x0B, 0x94B0);
-
-                re_mdio_write(sc, 0x1F, 0x0003);
-                re_mdio_write(sc, 0x12, 0x6096);
+                re_hw_phy_config_macfg23(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_24) {
                 re_hw_phy_config_macfg24(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_25) {
