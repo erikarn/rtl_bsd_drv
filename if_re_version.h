@@ -39,96 +39,14 @@
  * Electrical Engineering Department
  * Columbia University, New York City
  */
+#ifndef	__IF_RE_VERSION_H__
+#define	__IF_RE_VERSION_H__
 
-#include <sys/cdefs.h>
-
-#include "if_re_version.h"
-
-__FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ "  wpaul Exp $");
-
-/*
-* This driver also support Realtek RTL8110/RTL8169, RTL8111/RTL8168, RTL8125, RTL8126, and RTL8136/RTL810x.
-*/
-
-#include <sys/param.h>
-#include <sys/systm.h>
-#include <sys/sockio.h>
-#include <sys/mbuf.h>
-#include <sys/malloc.h>
-#include <sys/kernel.h>
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <sys/taskqueue.h>
-
-#include <net/if.h>
-#include <net/if_var.h>
-#include <net/if_private.h>	/* until driver is converted */
-#include <net/if_arp.h>
-#include <net/ethernet.h>
-#include <net/if_dl.h>
-#include <net/if_media.h>
-
-#include <net/bpf.h>
-
-#include <vm/vm.h>              /* for vtophys */
-#include <vm/pmap.h>            /* for vtophys */
-#include <machine/clock.h>      /* for DELAY */
-
-#include <machine/bus.h>
-#include <machine/resource.h>
-#include <sys/bus.h>
-#include <sys/rman.h>
-#include <sys/endian.h>
-
-#include <dev/mii/mii.h>
-#include "if_rereg.h"
 #ifdef ENABLE_FIBER_SUPPORT
-#include <dev/re/if_fiber.h>
-#endif //ENABLE_FIBER_SUPPORT
-
-#if OS_VER < VERSION(5,3)
-#include <pci/pcireg.h>
-#include <pci/pcivar.h>
-#include <machine/bus_pio.h>
-#include <machine/bus_memio.h>
+#define FIBER_SUFFIX "-FIBER"
 #else
-#include <dev/pci/pcireg.h>
-#include <dev/pci/pcivar.h>
-#include <sys/module.h>
+#define FIBER_SUFFIX ""
 #endif
+#define RE_VERSION "1.100.00" FIBER_SUFFIX
 
-#if OS_VER > VERSION(5,9)
-#include <sys/cdefs.h>
-#include <sys/endian.h>
-#include <net/if_types.h>
-#include <net/if_vlan_var.h>
-#endif
-
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <netinet/ip6.h>
-
-#include <machine/in_cksum.h>
-
-#include "opt_inet.h"
-#include "opt_inet6.h"
-
-#include "if_re_cfg.h"
-
-#define EE_SET(x)					\
-	CSR_WRITE_1(sc, RE_EECMD,			\
-		CSR_READ_1(sc, RE_EECMD) | x)
-
-#define EE_CLR(x)					\
-	CSR_WRITE_1(sc, RE_EECMD,			\
-		CSR_READ_1(sc, RE_EECMD) & ~x)
-
-void re_enable_cfg9346_write(struct re_softc *sc)
-{
-        EE_SET(RE_EEMODE_WRITECFG);
-}
-
-void re_disable_cfg9346_write(struct re_softc *sc)
-{
-        EE_CLR(RE_EEMODE_WRITECFG);
-}
+#endif	/* __IF_RE_VERSION_H__ */

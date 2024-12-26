@@ -42,12 +42,7 @@
 
 #include <sys/cdefs.h>
 
-#ifdef ENABLE_FIBER_SUPPORT
-#define FIBER_SUFFIX "-FIBER"
-#else
-#define FIBER_SUFFIX ""
-#endif
-#define RE_VERSION "1.100.00" FIBER_SUFFIX
+#include "if_re_version.h"
 
 __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ "  wpaul Exp $");
 
