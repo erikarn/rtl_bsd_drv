@@ -148,6 +148,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_mac_8411.h"
 #include "if_re_phy_8411.h"
 
+#include "if_re_phy_macfg27.h"
 #include "if_re_phy_macfg28.h"
 #include "if_re_phy_macfg31.h"
 #include "if_re_phy_macfg32.h"
@@ -9687,38 +9688,7 @@ static void re_hw_phy_config(struct re_softc *sc)
                 re_mdio_write(sc, 0x17, 0x0CC0);
                 re_mdio_write(sc, 0x1F, 0x0000);
         } else if (sc->re_type == MACFG_27) {
-                re_mdio_write(sc, 0x1F, 0x0000);
-                re_mdio_write(sc, 0x0d, re_mdio_read(sc, 0x0d) | BIT_5);
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0001);
-                re_mdio_write(sc, 0x1D, 0x3D98);
-                re_mdio_write(sc, 0x1F, 0x0000);
-
-                re_mdio_write(sc, 0x1F, 0x0001);
-                re_mdio_write(sc, 0x14, 0xCAA3);
-                re_mdio_write(sc, 0x1C, 0x000A);
-                re_mdio_write(sc, 0x18, 0x65D0);
-
-                re_mdio_write(sc, 0x1F, 0x0003);
-                re_mdio_write(sc, 0x17, 0xB580);
-                re_mdio_write(sc, 0x18, 0xFF54);
-                re_mdio_write(sc, 0x19, 0x3954);
-
-                re_mdio_write(sc, 0x1F, 0x0002);
-                re_mdio_write(sc, 0x0D, 0x310C);
-                re_mdio_write(sc, 0x0E, 0x310C);
-                re_mdio_write(sc, 0x0F, 0x311C);
-                re_mdio_write(sc, 0x06, 0x0761);
-
-                re_mdio_write(sc, 0x1F, 0x0003);
-                re_mdio_write(sc, 0x18, 0xFF55);
-                re_mdio_write(sc, 0x19, 0x3955);
-                re_mdio_write(sc, 0x18, 0xFF54);
-                re_mdio_write(sc, 0x19, 0x3954);
-
-                re_mdio_write(sc, 0x1f, 0x0001);
-                re_mdio_write(sc, 0x17, 0x0CC0);
+                re_hw_phy_config_macfg27(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_28) {
                 re_hw_phy_config_macfg28(sc, phy_power_saving);
         } else if (sc->re_type == MACFG_31) {
