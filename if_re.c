@@ -178,6 +178,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_phy_macfg64.h"
 #include "if_re_phy_macfg65.h"
 #include "if_re_phy_macfg66.h"
+#include "if_re_phy_macfg80.h"
 #include "if_re_phy_macfg82.h"
 
 struct bus_dma_tag {
@@ -9082,7 +9083,6 @@ static int re_enable_eee(struct re_softc *sc)
 static int re_disable_eee(struct re_softc *sc)
 {
         int ret;
-        u_int16_t data;
 
         ret = 0;
         switch (sc->re_type) {
@@ -9132,32 +9132,12 @@ static int re_disable_eee(struct re_softc *sc)
         case MACFG_73:
         case MACFG_74:
         case MACFG_75:
-                data = re_eri_read(sc, 0x1B0, 4, ERIAR_ExGMAC);
-                data &= ~(BIT_1 | BIT_0);
-                re_eri_write(sc, 0x1B0, 4, data, ERIAR_ExGMAC);
-                re_mdio_write(sc, 0x1F, 0x0A43);
-                data = re_mdio_read(sc, 0x11);
-                if (sc->re_type == MACFG_75)
-                        re_mdio_write(sc, 0x11, data | BIT_4);
-                else
-                        re_mdio_write(sc, 0x11, data & ~BIT_4);
-                re_mdio_write(sc, 0x1F, 0x0A5D);
-                re_mdio_write(sc, 0x10, 0x0000);
-                re_mdio_write(sc, 0x1F, 0x0000);
+                re_hw_phy_disable_eee_macfg56(sc);
                 break;
 
         case MACFG_80:
         case MACFG_81:
-                re_clear_mac_ocp_bit(sc, 0xE040, (BIT_1|BIT_0));
-                re_clear_mac_ocp_bit(sc, 0xEB62, (BIT_2|BIT_1));
-
-                re_clear_eth_ocp_phy_bit(sc, 0xA432, BIT_4);
-                re_clear_eth_ocp_phy_bit(sc, 0xA5D0, (BIT_2 | BIT_1));
-                re_clear_eth_ocp_phy_bit(sc, 0xA6D4, BIT_0);
-
-                re_clear_eth_ocp_phy_bit(sc, 0xA6D8, BIT_4);
-                re_clear_eth_ocp_phy_bit(sc, 0xA428, BIT_7);
-                re_clear_eth_ocp_phy_bit(sc, 0xA4A2, BIT_9);
+                re_hw_phy_disable_eee_macfg80(sc);
                 break;
 
         case MACFG_82:

@@ -28,8 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $FreeBSD: src/sys/dev/if_rl.c,v 1.38.2.7 2001/07/19 18:33:07 wpaul Exp $
  */
 
 /*
@@ -39,10 +37,8 @@
  * Electrical Engineering Department
  * Columbia University, New York City
  */
-#ifndef	__IF_RE_PHY_MACFG56_H__
+#ifndef	__IF_RE_PHY_MACFG80_H__
 
-extern	void re_hw_phy_config_macfg56(struct re_softc *sc,
-	    bool phy_power_saving);
-extern	void re_hw_phy_disable_eee_macfg56(struct re_softc *sc);
+extern	void re_hw_phy_disable_eee_macfg80(struct re_softc *sc);
 
-#endif	/* __IF_RE_PHY_MACFG56_H__ */
+#endif	/* __IF_RE_PHY_MACFG80_H__ */
