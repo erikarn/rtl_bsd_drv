@@ -178,6 +178,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_phy_macfg64.h"
 #include "if_re_phy_macfg65.h"
 #include "if_re_phy_macfg66.h"
+#include "if_re_phy_macfg82.h"
 
 struct bus_dma_tag {
         struct bus_dma_tag_common common;
@@ -9410,32 +9411,9 @@ static void re_init_hw_phy_mcu(struct re_softc *sc)
 
 static void re_set_hw_phy_before_init_phy_mcu(struct re_softc *sc)
 {
-        device_t dev = sc->dev;
-        u_int16_t PhyRegValue;
-
         switch (sc->re_type) {
         case MACFG_82:
-                re_real_ocp_phy_write(sc, 0xBF86, 0x9000);
-
-                re_set_eth_ocp_phy_bit(sc, 0xC402, BIT_10);
-                re_clear_eth_ocp_phy_bit(sc, 0xC402, BIT_10);
-
-                PhyRegValue = re_real_ocp_phy_read(sc, 0xBF86);
-                PhyRegValue &= (BIT_1 | BIT_0);
-                if (PhyRegValue != 0)
-                        device_printf(dev, "PHY watch dog not clear, value = 0x%x \n", PhyRegValue);
-
-                re_real_ocp_phy_write(sc, 0xBD86, 0x1010);
-                re_real_ocp_phy_write(sc, 0xBD88, 0x1010);
-
-                re_clear_set_eth_ocp_phy_bit(sc,
-                                             0xBD4E,
-                                             BIT_11 | BIT_10,
-                                             BIT_11);
-                re_clear_set_eth_ocp_phy_bit(sc,
-                                             0xBF46,
-                                             BIT_11 | BIT_10 | BIT_9 | BIT_8,
-                                             BIT_10 | BIT_9 | BIT_8);
+                re_set_hw_phy_before_init_phy_macfg82_mcu(sc);
                 break;
         }
 }
