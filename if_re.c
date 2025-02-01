@@ -180,6 +180,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_phy_macfg66.h"
 #include "if_re_phy_macfg80.h"
 #include "if_re_phy_macfg82.h"
+#include "if_re_phy_macfg90.h"
 
 struct bus_dma_tag {
         struct bus_dma_tag_common common;
@@ -9146,28 +9147,13 @@ static int re_disable_eee(struct re_softc *sc)
         case MACFG_85:
         case MACFG_86:
         case MACFG_87:
-                re_clear_mac_ocp_bit(sc, 0xE040, (BIT_1|BIT_0));
-
-                re_set_eth_ocp_phy_bit(sc, 0xA432, BIT_4);
-
-                re_clear_eth_ocp_phy_bit(sc, 0xA5D0, (BIT_2 | BIT_1));
-                re_clear_eth_ocp_phy_bit(sc, 0xA6D4, BIT_0);
-
-                re_clear_eth_ocp_phy_bit(sc, 0xA6D8, BIT_4);
-                re_clear_eth_ocp_phy_bit(sc, 0xA428, BIT_7);
-                re_clear_eth_ocp_phy_bit(sc, 0xA4A2, BIT_9);
+                re_hw_phy_disable_eee_macfg82(sc);
                 break;
 
         case MACFG_90:
         case MACFG_91:
         case MACFG_92:
-                re_clear_mac_ocp_bit(sc, 0xE040, (BIT_1|BIT_0));
-
-                re_clear_eth_ocp_phy_bit(sc, 0xA5D0, (BIT_2 | BIT_1));
-                re_clear_eth_ocp_phy_bit(sc, 0xA6D4, (BIT_0 | BIT_1));
-
-                re_clear_eth_ocp_phy_bit(sc, 0xA428, BIT_7);
-                re_clear_eth_ocp_phy_bit(sc, 0xA4A2, BIT_9);
+                re_hw_phy_disable_eee_macfg90(sc);
                 break;
 
         default:

@@ -64,6 +64,7 @@ SRCS	= if_re.c if_re_eeprom.c if_re_mdio.c if_re_ocp.c if_re_eri.c \
 	  if_re_phy_macfg66.c \
 	  if_re_phy_macfg80.c \
 	  if_re_phy_macfg82.c \
+	  if_re_phy_macfg90.c \
 	  opt_bdg.h device_if.h bus_if.h pci_if.h opt_inet.h opt_inet6.h
 
 .if $(enable_fiber_support) == y

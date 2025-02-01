@@ -117,46 +117,16 @@
 #include "if_re_mac_mcu.h"
 #include "if_re_phy_mcu.h"
 
-#include "if_re_phy_macfg82.h"
+#include "if_re_phy_macfg90.h"
 
 void
-re_set_hw_phy_before_init_phy_macfg82_mcu(struct re_softc *sc)
-{
-	device_t dev = sc->dev;
-	u_int16_t PhyRegValue;
-
-	re_real_ocp_phy_write(sc, 0xBF86, 0x9000);
-
-	re_set_eth_ocp_phy_bit(sc, 0xC402, BIT_10);
-	re_clear_eth_ocp_phy_bit(sc, 0xC402, BIT_10);
-
-	PhyRegValue = re_real_ocp_phy_read(sc, 0xBF86);
-	PhyRegValue &= (BIT_1 | BIT_0);
-	if (PhyRegValue != 0)
-		device_printf(dev,
-		    "PHY watch dog not clear, value = 0x%x \n", PhyRegValue);
-
-	re_real_ocp_phy_write(sc, 0xBD86, 0x1010);
-	re_real_ocp_phy_write(sc, 0xBD88, 0x1010);
-
-	re_clear_set_eth_ocp_phy_bit(sc, 0xBD4E, BIT_11 | BIT_10, BIT_11);
-	re_clear_set_eth_ocp_phy_bit(sc, 0xBF46,
-	    BIT_11 | BIT_10 | BIT_9 | BIT_8,
-	    BIT_10 | BIT_9 | BIT_8);
-}
-
-void
-re_hw_phy_disable_eee_macfg82(struct re_softc *sc)
+re_hw_phy_disable_eee_macfg90(struct re_softc *sc)
 {
 	re_clear_mac_ocp_bit(sc, 0xE040, (BIT_1|BIT_0));
 
-	re_set_eth_ocp_phy_bit(sc, 0xA432, BIT_4);
-
 	re_clear_eth_ocp_phy_bit(sc, 0xA5D0, (BIT_2 | BIT_1));
-	re_clear_eth_ocp_phy_bit(sc, 0xA6D4, BIT_0);
+	re_clear_eth_ocp_phy_bit(sc, 0xA6D4, (BIT_0 | BIT_1));
 
-	re_clear_eth_ocp_phy_bit(sc, 0xA6D8, BIT_4);
 	re_clear_eth_ocp_phy_bit(sc, 0xA428, BIT_7);
 	re_clear_eth_ocp_phy_bit(sc, 0xA4A2, BIT_9);
 }
-
