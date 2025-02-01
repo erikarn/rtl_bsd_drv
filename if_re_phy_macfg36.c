@@ -181,3 +181,31 @@ re_hw_phy_config_macfg36(struct re_softc *sc, bool phy_power_saving)
 	re_mdio_write(sc, 0x06, 0x8025);
 	re_mdio_write(sc, 0x1F, 0x0000);
 }
+
+void
+re_hw_phy_disable_eee_macfg36(struct re_softc *sc)
+{
+	uint16_t data;
+
+	re_mdio_write(sc, 0x1F, 0x0007);
+	re_mdio_write(sc, 0x1E, 0x0020);
+	data = re_mdio_read(sc, 0x15) & ~0x0100;
+	re_mdio_write(sc, 0x15, data);
+	re_mdio_write(sc, 0x1F, 0x0006);
+	re_mdio_write(sc, 0x00, 0x5A00);
+	re_mdio_write(sc, 0x1F, 0x0000);
+	re_mdio_write(sc, 0x0D, 0x0007);
+	re_mdio_write(sc, 0x0E, 0x003C);
+	re_mdio_write(sc, 0x0D, 0x4007);
+	re_mdio_write(sc, 0x0E, 0x0000);
+	re_mdio_write(sc, 0x0D, 0x0000);
+	re_mdio_write(sc, 0x1F, 0x0000);
+	if (CSR_READ_1(sc, RE_CFG4) & RL_CFG4_CUSTOMIZED_LED) {
+		re_mdio_write(sc, 0x1F, 0x0005);
+		re_mdio_write(sc, 0x05, 0x8B82);
+		data = re_mdio_read(sc, 0x06) & ~0x0010;
+		re_mdio_write(sc, 0x05, 0x8B82);
+		re_mdio_write(sc, 0x06, data);
+		re_mdio_write(sc, 0x1F, 0x0000);
+	}
+}

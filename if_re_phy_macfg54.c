@@ -606,3 +606,22 @@ re_hw_phy_config_macfg54(struct re_softc *sc, bool phy_power_saving)
 	re_mdio_write(sc, 0x0E, 0x0000);
 	re_mdio_write(sc, 0x0D, 0x0000);
 }
+
+void
+re_hw_phy_disable_eee_macfg54(struct re_softc *sc)
+{
+	re_eri_write(sc, 0x1B0, 2, 0, ERIAR_ExGMAC);
+	re_mdio_write(sc, 0x1F, 0x0004);
+	re_mdio_write(sc, 0x10, 0xC07F);
+	re_mdio_write(sc, 0x19, 0x7030);
+	re_mdio_write(sc, 0x1F, 0x0000);
+
+	re_mdio_write(sc, 0x1F, 0x0000);
+	re_mdio_write(sc, 0x0D, 0x0007);
+	re_mdio_write(sc, 0x0E, 0x003C);
+	re_mdio_write(sc, 0x0D, 0x4007);
+	re_mdio_write(sc, 0x0E, 0x0000);
+	re_mdio_write(sc, 0x0D, 0x0000);
+
+	re_mdio_write(sc, MII_BMCR, BMCR_AUTOEN | BMCR_STARTNEG);
+}
