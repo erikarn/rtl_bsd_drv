@@ -127,6 +127,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_dash.h"
 #include "if_re_mac_mcu.h"
 #include "if_re_phy_mcu.h"
+#include "if_re_oob_mutex.h"
 
 #include "chipset/8168/if_re_mac_8168.h"
 #include "chipset/8168/if_re_phy_8168.h"
@@ -314,8 +315,6 @@ static void re_release_buf(struct re_softc *);
 static void set_rxbufsize(struct re_softc*);
 static void re_release_rx_buf(struct re_softc *);
 static void re_release_tx_buf(struct re_softc *);
-static void OOB_mutex_lock(struct re_softc *);
-static void OOB_mutex_unlock(struct re_softc *);
 static void re_hw_start_unlock(struct re_softc *sc);
 static void re_hw_start_unlock_8125(struct re_softc *sc);
 
@@ -5724,9 +5723,9 @@ static void re_hw_start_unlock(struct re_softc *sc)
                 re_eri_write(sc, 0xE8, 4, 0x00100006, ERIAR_ExGMAC);
 
                 if (sc->re_type == MACFG_62 || sc->re_type == MACFG_67) {
-                        OOB_mutex_lock(sc);
+                        if_re_OOB_mutex_lock(sc);
                         re_eri_write(sc, 0x5F0, 4, 0x4F87, ERIAR_ExGMAC);
-                        OOB_mutex_unlock(sc);
+                        if_re_OOB_mutex_unlock(sc);
                 }
 
                 Data32 = re_eri_read(sc, 0xdc, 4, ERIAR_ExGMAC);
@@ -5836,13 +5835,13 @@ static void re_hw_start_unlock(struct re_softc *sc)
                 else
                         re_mac_ocp_write(sc, 0xEA80, 0x0000);
 
-                OOB_mutex_lock(sc);
+                if_re_OOB_mutex_lock(sc);
                 data16 = re_mac_ocp_read(sc, 0xE052);
                 data16 &= ~(BIT_3 | BIT_0);
                 if (sc->HwPkgDet == 0x0F)
                         data16 |= BIT_0;
                 re_mac_ocp_write(sc, 0xE052, data16);
-                OOB_mutex_unlock(sc);
+                if_re_OOB_mutex_unlock(sc);
 
                 data16 = re_mac_ocp_read(sc, 0xD420);
                 data16 &= ~(BIT_11 | BIT_10 | BIT_9 | BIT_8 | BIT_7 | BIT_6 | BIT_5 | BIT_4 | BIT_3 | BIT_2 | BIT_1 | BIT_0);
@@ -5882,12 +5881,12 @@ static void re_hw_start_unlock(struct re_softc *sc)
                 re_eri_write(sc, 0xD0, 1, 0x5F, ERIAR_ExGMAC);
                 re_eri_write(sc, 0xE8, 4, 0x00100006, ERIAR_ExGMAC);
 
-                OOB_mutex_lock(sc);
+                if_re_OOB_mutex_lock(sc);
                 if (sc->HwPkgDet == 0x0F)
                         re_eri_write(sc, 0x5F0, 2, 0x4F00, ERIAR_ExGMAC);
                 else
                         re_eri_write(sc, 0x5F0, 2, 0x4000, ERIAR_ExGMAC);
-                OOB_mutex_unlock(sc);
+                if_re_OOB_mutex_unlock(sc);
 
                 Data32 = re_eri_read(sc, 0xdc, 4, ERIAR_ExGMAC);
                 Data32 &= ~BIT_0;
@@ -6386,7 +6385,7 @@ static void re_hw_start_unlock_8125(struct re_softc *sc)
                 re_mac_ocp_write(sc, 0xEA1C, data16);
 
                 if (HW_DASH_SUPPORT_DASH(sc))
-                        OOB_mutex_lock(sc);
+                        if_re_OOB_mutex_lock(sc);
 
                 if (sc->re_type == MACFG_84 || sc->re_type == MACFG_85)
                         re_mac_ocp_write(sc, 0xE0C0, 0x4403);
@@ -6397,7 +6396,7 @@ static void re_hw_start_unlock_8125(struct re_softc *sc)
                 re_clear_mac_ocp_bit(sc, 0xE052, BIT_3 | BIT_7);
 
                 if (HW_DASH_SUPPORT_DASH(sc))
-                        OOB_mutex_unlock(sc);
+                        if_re_OOB_mutex_unlock(sc);
 
                 data16 = re_mac_ocp_read(sc, 0xC0AC);
                 data16 |= (BIT_7 | BIT_8 | BIT_9 | BIT_10 | BIT_11 | BIT_12);
@@ -8851,12 +8850,12 @@ static void _re_disable_advanced_eee(struct re_softc *sc)
 static void re_disable_advanced_eee(struct re_softc *sc)
 {
         if (sc->HwSuppDashVer > 1)
-                OOB_mutex_lock(sc);
+                if_re_OOB_mutex_lock(sc);
 
         _re_disable_advanced_eee(sc);
 
         if (sc->HwSuppDashVer > 1)
-                OOB_mutex_unlock(sc);
+                if_re_OOB_mutex_unlock(sc);
 }
 
 static int re_enable_eee(struct re_softc *sc)
@@ -9606,119 +9605,6 @@ static u_int16_t _re_ephy_read(struct re_softc *sc, u_int8_t RegAddr)
 u_int16_t re_ephy_read(struct re_softc *sc, u_int8_t RegAddr)
 {
         return _re_ephy_read(sc, RtCheckPciEPhyAddr(sc, RegAddr));
-}
-
-static void OOB_mutex_lock(struct re_softc *sc)
-{
-        u_int8_t reg_16, reg_a0;
-        u_int32_t wait_cnt_0, wait_Cnt_1;
-        u_int16_t ocp_reg_mutex_ib;
-        u_int16_t ocp_reg_mutex_oob;
-        u_int16_t ocp_reg_mutex_prio;
-
-        if (!sc->re_dash)
-                return;
-
-        switch (sc->re_type) {
-        case MACFG_63:
-        case MACFG_64:
-        case MACFG_65:
-                ocp_reg_mutex_oob = 0x16;
-                ocp_reg_mutex_ib = 0x17;
-                ocp_reg_mutex_prio = 0x9C;
-                break;
-        case MACFG_66:
-                ocp_reg_mutex_oob = 0x06;
-                ocp_reg_mutex_ib = 0x07;
-                ocp_reg_mutex_prio = 0x9C;
-                break;
-        case MACFG_61:
-        case MACFG_62:
-        case MACFG_67:
-        case MACFG_70:
-        case MACFG_71:
-        case MACFG_72:
-        case MACFG_73:
-        case MACFG_80:
-        case MACFG_81:
-        case MACFG_84:
-        case MACFG_85:
-                ocp_reg_mutex_oob = 0x110;
-                ocp_reg_mutex_ib = 0x114;
-                ocp_reg_mutex_prio = 0x11C;
-                break;
-        default:
-                return;
-        }
-
-        re_ocp_write(sc, ocp_reg_mutex_ib, 1, BIT_0);
-        reg_16 = re_ocp_read(sc, ocp_reg_mutex_oob, 1);
-        wait_cnt_0 = 0;
-        while(reg_16) {
-                reg_a0 = re_ocp_read(sc, ocp_reg_mutex_prio, 1);
-                if (reg_a0) {
-                        re_ocp_write(sc, ocp_reg_mutex_ib, 1, 0x00);
-                        reg_a0 = re_ocp_read(sc, ocp_reg_mutex_prio, 1);
-                        wait_Cnt_1 = 0;
-                        while(reg_a0) {
-                                reg_a0 = re_ocp_read(sc, ocp_reg_mutex_prio, 1);
-
-                                wait_Cnt_1++;
-
-                                if (wait_Cnt_1 > 2000)
-                                        break;
-                        };
-                        re_ocp_write(sc, ocp_reg_mutex_ib, 1, BIT_0);
-
-                }
-                reg_16 = re_ocp_read(sc, ocp_reg_mutex_oob, 1);
-
-                wait_cnt_0++;
-
-                if (wait_cnt_0 > 2000)
-                        break;
-        };
-}
-
-static void OOB_mutex_unlock(struct re_softc *sc)
-{
-        u_int16_t ocp_reg_mutex_ib;
-        u_int16_t ocp_reg_mutex_prio;
-
-        if (!sc->re_dash)
-                return;
-
-        switch (sc->re_type) {
-        case MACFG_63:
-        case MACFG_64:
-        case MACFG_65:
-                ocp_reg_mutex_ib = 0x17;
-                ocp_reg_mutex_prio = 0x9C;
-                break;
-        case MACFG_66:
-                ocp_reg_mutex_ib = 0x07;
-                ocp_reg_mutex_prio = 0x9C;
-                break;
-        case MACFG_61:
-        case MACFG_62:
-        case MACFG_67:
-        case MACFG_70:
-        case MACFG_71:
-        case MACFG_72:
-        case MACFG_73:
-        case MACFG_80:
-        case MACFG_81:
-        case MACFG_84:
-        case MACFG_85:
-                ocp_reg_mutex_ib = 0x114;
-                ocp_reg_mutex_prio = 0x11C;
-                break;
-        default:
-                return;
-        }
-
-        re_ocp_write(sc, ocp_reg_mutex_prio, 1, BIT_0);
-        re_ocp_write(sc, ocp_reg_mutex_ib, 1, 0x00);
 }
 
 void re_driver_start(struct re_softc *sc)
