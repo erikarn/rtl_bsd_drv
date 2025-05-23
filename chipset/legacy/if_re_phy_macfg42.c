@@ -705,6 +705,37 @@ re_hw_phy_config_macfg42(struct re_softc *sc, bool phy_power_saving)
 }
 
 void
+re_hw_phy_enable_eee_macfg42(struct re_softc *sc)
+{
+	re_eri_write(sc, 0x1B0, 2, 0xED03, ERIAR_ExGMAC);
+	re_mdio_write(sc, 0x1F, 0x0004);
+	if (CSR_READ_1(sc, 0xEF) & 0x02) {
+		re_mdio_write(sc, 0x10, 0x731F);
+		re_mdio_write(sc, 0x19, 0x7630);
+	} else {
+		re_mdio_write(sc, 0x10, 0x711F);
+		re_mdio_write(sc, 0x19, 0x7030);
+	}
+	re_mdio_write(sc, 0x1A, 0x1506);
+	re_mdio_write(sc, 0x1B, 0x0551);
+	re_mdio_write(sc, 0x1F, 0x0000);
+	re_mdio_write(sc, 0x0D, 0x0007);
+	re_mdio_write(sc, 0x0E, 0x003C);
+	re_mdio_write(sc, 0x0D, 0x4007);
+	re_mdio_write(sc, 0x0E, 0x0002);
+	re_mdio_write(sc, 0x0D, 0x0000);
+
+	re_mdio_write(sc, 0x1F, 0x0000);
+	re_mdio_write(sc, 0x0D, 0x0003);
+	re_mdio_write(sc, 0x0E, 0x0015);
+	re_mdio_write(sc, 0x0D, 0x4003);
+	re_mdio_write(sc, 0x0E, 0x0002);
+	re_mdio_write(sc, 0x0D, 0x0000);
+
+	re_mdio_write(sc, MII_BMCR, BMCR_AUTOEN | BMCR_STARTNEG);
+}
+
+void
 re_hw_phy_disable_eee_macfg42(struct re_softc *sc)
 {
 	re_eri_write(sc, 0x1B0, 2, 0, ERIAR_ExGMAC);
