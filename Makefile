@@ -64,6 +64,7 @@ SRCS+=	  chipset/legacy/if_re_phy_macfg6.c \
 	  chipset/legacy/if_re_phy_macfg64.c \
 	  chipset/legacy/if_re_phy_macfg65.c \
 	  chipset/legacy/if_re_phy_macfg66.c \
+	  chipset/legacy/if_re_phy_macfg68.c \
 	  chipset/legacy/if_re_phy_macfg80.c \
 	  chipset/legacy/if_re_phy_macfg82.c \
 	  chipset/legacy/if_re_phy_macfg90.c \

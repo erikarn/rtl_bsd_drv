@@ -179,6 +179,7 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "chipset/legacy/if_re_phy_macfg64.h"
 #include "chipset/legacy/if_re_phy_macfg65.h"
 #include "chipset/legacy/if_re_phy_macfg66.h"
+#include "chipset/legacy/if_re_phy_macfg68.h"
 #include "chipset/legacy/if_re_phy_macfg80.h"
 #include "chipset/legacy/if_re_phy_macfg82.h"
 #include "chipset/legacy/if_re_phy_macfg90.h"
@@ -9165,11 +9166,7 @@ static int re_disable_eee(struct re_softc *sc)
         case MACFG_69:
         case MACFG_74:
         case MACFG_75:
-                re_mdio_write(sc, 0x1F, 0x0A42);
-                re_clear_eth_phy_bit(sc, 0x14, BIT_7);
-                re_mdio_write(sc, 0x1F, 0x0A4A);
-                re_clear_eth_phy_bit(sc, 0x11, BIT_9);
-                re_mdio_write(sc, 0x1F, 0x0000);
+                re_hw_phy_disable_eee_post_macfg68(sc);
                 break;
         }
 
