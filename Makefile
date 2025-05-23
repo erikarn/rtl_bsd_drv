@@ -17,16 +17,16 @@ SRCS	= if_re.c if_re_eeprom.c if_re_mdio.c if_re_ocp.c if_re_eri.c \
 	  if_re_misc.c \
 	  if_re_mac_mcu.c \
 	  if_re_phy_mcu.c \
-	  if_re_mac_8125.c \
-	  if_re_phy_8125.c \
-	  if_re_hw_8125.c \
-	  if_re_mac_8126.c \
-	  if_re_phy_8126.c \
-	  if_re_mac_8168.c \
-	  if_re_phy_8168.c \
-	  if_re_phy_8169.c \
-	  if_re_mac_8411.c \
-	  if_re_phy_8411.c \
+	  chipset/8125/if_re_mac_8125.c \
+	  chipset/8125/if_re_phy_8125.c \
+	  chipset/8125/if_re_hw_8125.c \
+	  chipset/8126/if_re_mac_8126.c \
+	  chipset/8126/if_re_phy_8126.c \
+	  chipset/8168/if_re_mac_8168.c \
+	  chipset/8168/if_re_phy_8168.c \
+	  chipset/8169/if_re_phy_8169.c \
+	  chipset/8411/if_re_mac_8411.c \
+	  chipset/8411/if_re_phy_8411.c \
 	  if_re_phy_macfg6.c \
 	  if_re_phy_macfg14.c \
 	  if_re_phy_macfg15.c \

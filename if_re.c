@@ -128,20 +128,20 @@ __FBSDID("$FreeBSD: src/sys/dev/re/if_re.c,v " RE_VERSION __DATE__ " " __TIME__ 
 #include "if_re_mac_mcu.h"
 #include "if_re_phy_mcu.h"
 
-#include "if_re_mac_8168.h"
-#include "if_re_phy_8168.h"
+#include "chipset/8168/if_re_mac_8168.h"
+#include "chipset/8168/if_re_phy_8168.h"
 
-#include "if_re_phy_8169.h"
+#include "chipset/8169/if_re_phy_8169.h"
 
-#include "if_re_mac_8125.h"
-#include "if_re_hw_8125.h"
-#include "if_re_phy_8125.h"
+#include "chipset/8125/if_re_mac_8125.h"
+#include "chipset/8125/if_re_hw_8125.h"
+#include "chipset/8125/if_re_phy_8125.h"
 
-#include "if_re_mac_8126.h"
-#include "if_re_phy_8126.h"
+#include "chipset/8126/if_re_mac_8126.h"
+#include "chipset/8126/if_re_phy_8126.h"
 
-#include "if_re_mac_8411.h"
-#include "if_re_phy_8411.h"
+#include "chipset/8411/if_re_mac_8411.h"
+#include "chipset/8411/if_re_phy_8411.h"
 
 #include "if_re_phy_macfg6.h"
 #include "if_re_phy_macfg14.h"
