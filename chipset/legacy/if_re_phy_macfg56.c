@@ -222,3 +222,32 @@ re_hw_phy_disable_eee_macfg56(struct re_softc *sc)
 	re_mdio_write(sc, 0x10, 0x0000);
 	re_mdio_write(sc, 0x1F, 0x0000);
 }
+
+void
+re_hw_phy_enable_eee_macfg56(struct re_softc *sc)
+{
+	uint16_t data;
+
+	data = re_eri_read(sc, 0x1B0, 4, ERIAR_ExGMAC);
+	data |= BIT_1 | BIT_0;
+	re_eri_write(sc, 0x1B0, 4, data, ERIAR_ExGMAC);
+	re_mdio_write(sc, 0x1F, 0x0A43);
+	data = re_mdio_read(sc, 0x11);
+	re_mdio_write(sc, 0x11, data | BIT_4);
+	re_mdio_write(sc, 0x1F, 0x0A5D);
+	re_mdio_write(sc, 0x10, 0x0006);
+	re_mdio_write(sc, 0x1F, 0x0000);
+
+	switch (sc->re_type) {
+	case MACFG_68:
+	case MACFG_69:
+	case MACFG_74:
+	case MACFG_75:
+		re_mdio_write(sc, 0x1F, 0x0A4A);
+		re_set_eth_phy_bit(sc, 0x11, BIT_9);
+		re_mdio_write(sc, 0x1F, 0x0A42);
+		re_set_eth_phy_bit(sc, 0x14, BIT_7);
+		re_mdio_write(sc, 0x1F, 0x0000);
+		break;
+	}
+}

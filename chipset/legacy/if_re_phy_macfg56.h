@@ -44,5 +44,6 @@
 extern	void re_hw_phy_config_macfg56(struct re_softc *sc,
 	    bool phy_power_saving);
 extern	void re_hw_phy_disable_eee_macfg56(struct re_softc *sc);
+extern	void re_hw_phy_enable_eee_macfg56(struct re_softc *sc);
 
 #endif	/* __IF_RE_PHY_MACFG56_H__ */

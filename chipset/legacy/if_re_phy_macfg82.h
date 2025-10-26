@@ -41,5 +41,6 @@
 
 extern	void re_set_hw_phy_before_init_phy_macfg82_mcu(struct re_softc *sc);
 extern	void re_hw_phy_disable_eee_macfg82(struct re_softc *sc);
+extern	void re_hw_phy_enable_eee_macfg82(struct re_softc *sc);
 
 #endif	/* __IF_RE_PHY_MACFG82_H__ */

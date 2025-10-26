@@ -197,19 +197,19 @@ struct bus_dma_tag {
  */
 static struct re_type re_devs[] = {
         {
-                RT_VENDORID, RT_DEVICEID_8169,
+                RT_VENDORID, RT_DEVICEID_8169, /* Note: handled by if_re */
                 "Realtek PCI GbE Family Controller"
         },
         {
-                RT_VENDORID, RT_DEVICEID_8169SC,
+                RT_VENDORID, RT_DEVICEID_8169SC, /* Note: handled by if_re */
                 "Realtek PCI GbE Family Controller"
         },
         {
-                RT_VENDORID, RT_DEVICEID_8168,
+                RT_VENDORID, RT_DEVICEID_8168, /* Note: handled by if_re */
                 "Realtek PCIe GbE Family Controller"
         },
         {
-                RT_VENDORID, RT_DEVICEID_8161,
+                RT_VENDORID, RT_DEVICEID_8161, /* Note: handled by if_re */
                 "Realtek PCIe GbE Family Controller"
         },
         {
@@ -1740,6 +1740,7 @@ static int re_check_mac_version(struct re_softc *sc)
         device_t dev = sc->dev;
         int error = 0;
 
+	/* [adrian] mac version - mask 0xfcf00000 */
         switch(CSR_READ_4(sc, RE_TXCFG) & 0xFCF00000) {
         case RE_HWREV_8169S:
         case RE_HWREV_8110S:
@@ -3751,6 +3752,7 @@ static int re_attach(device_t dev)
                 goto fail;
         }
 
+	/* [adrian] mac version - mask 0xfcf00000 */
 	device_printf(dev, "%s: HWREV=0x%08x, MACFG=%d\n",
 	    __func__,
             (CSR_READ_4(sc, RE_TXCFG) & 0xFCF00000),
@@ -4698,6 +4700,10 @@ static void re_hw_start_unlock(struct re_softc *sc)
                 CSR_WRITE_4(sc, RE_TXCFG, RE_TXCFG_CONFIG);
         }
 
+	/*
+	 * [adrian] mac version - mask 0xfc800000; NOT 0xfcf00000;
+	 * so SLIGHTLY different to check_mac_version above
+	 */
         macver = CSR_READ_4(sc, RE_TXCFG) & 0xFC800000;
         if (macver == 0x00800000 || macver == 0x04000000 || macver == 0x10000000) {
                 CSR_WRITE_2(sc, RE_CPlusCmd, 0x0063| ((sc->re_type == MACFG_3 && sc->re_8169_MacVersion==1) ? 0x4008:0));
@@ -8862,7 +8868,6 @@ static void re_disable_advanced_eee(struct re_softc *sc)
 static int re_enable_eee(struct re_softc *sc)
 {
         int ret;
-        u_int16_t data;
 
         ret = 0;
         switch (sc->re_type) {
@@ -8874,91 +8879,23 @@ static int re_enable_eee(struct re_softc *sc)
         case MACFG_53:
         case MACFG_54:
         case MACFG_55:
-                re_eri_write(sc, 0x1B0, 2, 0xED03, ERIAR_ExGMAC);
-                re_mdio_write(sc, 0x1F, 0x0004);
-                re_mdio_write(sc, 0x10, 0x731F);
-                re_mdio_write(sc, 0x19, 0x7630);
-                re_mdio_write(sc, 0x1A, 0x1506);
-                re_mdio_write(sc, 0x1F, 0x0000);
-                re_mdio_write(sc, 0x0D, 0x0007);
-                re_mdio_write(sc, 0x0E, 0x003C);
-                re_mdio_write(sc, 0x0D, 0x4007);
-                re_mdio_write(sc, 0x0E, 0x0002);
-                re_mdio_write(sc, 0x0D, 0x0000);
-
-                re_mdio_write(sc, MII_BMCR, BMCR_AUTOEN | BMCR_STARTNEG);
+                re_hw_phy_enable_eee_macfg53(sc);
                 break;
 
         case MACFG_36:
         case MACFG_37:
-                re_mdio_write(sc, 0x1F, 0x0007);
-                re_mdio_write(sc, 0x1E, 0x0020);
-                data = re_mdio_read(sc, 0x15) | 0x0100;
-                re_mdio_write(sc, 0x15, data);
-                re_mdio_write(sc, 0x1F, 0x0006);
-                re_mdio_write(sc, 0x00, 0x5A30);
-                re_mdio_write(sc, 0x1F, 0x0000);
-                re_mdio_write(sc, 0x0D, 0x0007);
-                re_mdio_write(sc, 0x0E, 0x003C);
-                re_mdio_write(sc, 0x0D, 0x4007);
-                re_mdio_write(sc, 0x0E, 0x0006);
-                re_mdio_write(sc, 0x0D, 0x0000);
-                if ((CSR_READ_1(sc, RE_CFG4)&RL_CFG4_CUSTOMIZED_LED) && (CSR_READ_1(sc, RE_MACDBG) & BIT_7)) {
-                        re_mdio_write(sc, 0x1F, 0x0005);
-                        re_mdio_write(sc, 0x05, 0x8AC8);
-                        re_mdio_write(sc, 0x06, CSR_READ_1(sc, RE_CUSTOM_LED));
-                        re_mdio_write(sc, 0x05, 0x8B82);
-                        data = re_mdio_read(sc, 0x06) | 0x0010;
-                        re_mdio_write(sc, 0x05, 0x8B82);
-                        re_mdio_write(sc, 0x06, data);
-                        re_mdio_write(sc, 0x1F, 0x0000);
-                }
+                re_hw_phy_enable_eee_macfg36(sc);
                 break;
 
         case MACFG_50:
         case MACFG_51:
         case MACFG_52:
-                data = re_eri_read(sc, 0x1B0, 4, ERIAR_ExGMAC) | 0x0003;
-                re_eri_write(sc, 0x1B0, 4, data, ERIAR_ExGMAC);
-                re_mdio_write(sc, 0x1F, 0x0007);
-                re_mdio_write(sc, 0x1E, 0x0020);
-                data = re_mdio_read(sc, 0x15)|0x0100;
-                re_mdio_write(sc, 0x15, data);
-                re_mdio_write(sc, 0x1F, 0x0005);
-                re_mdio_write(sc, 0x05, 0x8B85);
-                data = re_mdio_read(sc, 0x06)|0x2000;
-                re_mdio_write(sc, 0x06, data);
-                re_mdio_write(sc, 0x1F, 0x0000);
-                re_mdio_write(sc, 0x0D, 0x0007);
-                re_mdio_write(sc, 0x0E, 0x003C);
-                re_mdio_write(sc, 0x0D, 0x4007);
-                re_mdio_write(sc, 0x0E, 0x0006);
-                re_mdio_write(sc, 0x1D, 0x0000);
+                re_hw_phy_enable_eee_macfg50(sc);
                 break;
 
         case MACFG_38:
         case MACFG_39:
-                data = re_eri_read(sc, 0x1B0, 4, ERIAR_ExGMAC);
-                data |= BIT_1 | BIT_0;
-                re_eri_write(sc, 0x1B0, 4, data, ERIAR_ExGMAC);
-                re_mdio_write(sc, 0x1F, 0x0004);
-                re_mdio_write(sc, 0x1F, 0x0007);
-                re_mdio_write(sc, 0x1e, 0x0020);
-                data = re_mdio_read(sc, 0x15);
-                data |= BIT_8;
-                re_mdio_write(sc, 0x15, data);
-                re_mdio_write(sc, 0x1F, 0x0002);
-                re_mdio_write(sc, 0x1F, 0x0005);
-                re_mdio_write(sc, 0x05, 0x8B85);
-                data = re_mdio_read(sc, 0x06);
-                data |= BIT_13;
-                re_mdio_write(sc, 0x06, data);
-                re_mdio_write(sc, 0x1F, 0x0000);
-                re_mdio_write(sc, 0x0D, 0x0007);
-                re_mdio_write(sc, 0x0E, 0x003C);
-                re_mdio_write(sc, 0x0D, 0x4007);
-                re_mdio_write(sc, 0x0E, 0x0006);
-                re_mdio_write(sc, 0x0D, 0x0000);
+                re_hw_phy_enable_eee_macfg38(sc);
                 break;
 
         case MACFG_56:
@@ -8977,29 +8914,12 @@ static int re_enable_eee(struct re_softc *sc)
         case MACFG_73:
         case MACFG_74:
         case MACFG_75:
-                data = re_eri_read(sc, 0x1B0, 4, ERIAR_ExGMAC);
-                data |= BIT_1 | BIT_0;
-                re_eri_write(sc, 0x1B0, 4, data, ERIAR_ExGMAC);
-                re_mdio_write(sc, 0x1F, 0x0A43);
-                data = re_mdio_read(sc, 0x11);
-                re_mdio_write(sc, 0x11, data | BIT_4);
-                re_mdio_write(sc, 0x1F, 0x0A5D);
-                re_mdio_write(sc, 0x10, 0x0006);
-                re_mdio_write(sc, 0x1F, 0x0000);
+                re_hw_phy_enable_eee_macfg56(sc);
                 break;
 
         case MACFG_80:
         case MACFG_81:
-                re_set_mac_ocp_bit(sc, 0xE040, (BIT_1|BIT_0));
-                re_set_mac_ocp_bit(sc, 0xEB62, (BIT_2|BIT_1));
-
-                re_set_eth_ocp_phy_bit(sc, 0xA432, BIT_4);
-                re_set_eth_ocp_phy_bit(sc, 0xA5D0, (BIT_2 | BIT_1));
-                re_clear_eth_ocp_phy_bit(sc, 0xA6D4, BIT_0);
-
-                re_clear_eth_ocp_phy_bit(sc, 0xA6D8, BIT_4);
-                re_clear_eth_ocp_phy_bit(sc, 0xA428, BIT_7);
-                re_clear_eth_ocp_phy_bit(sc, 0xA4A2, BIT_9);
+                re_hw_phy_enable_eee_macfg80(sc);
                 break;
 
         case MACFG_82:
@@ -9008,45 +8928,17 @@ static int re_enable_eee(struct re_softc *sc)
         case MACFG_85:
         case MACFG_86:
         case MACFG_87:
-                re_set_mac_ocp_bit(sc, 0xE040, (BIT_1|BIT_0));
-
-                re_set_eth_ocp_phy_bit(sc, 0xA432, BIT_4);
-
-                re_set_eth_ocp_phy_bit(sc, 0xA5D0, (BIT_2 | BIT_1));
-                re_clear_eth_ocp_phy_bit(sc, 0xA6D4, BIT_0);
-
-                re_clear_eth_ocp_phy_bit(sc, 0xA6D8, BIT_4);
-                re_clear_eth_ocp_phy_bit(sc, 0xA428, BIT_7);
-                re_clear_eth_ocp_phy_bit(sc, 0xA4A2, BIT_9);
+                re_hw_phy_enable_eee_macfg82(sc);
                 break;
 
         case MACFG_90:
         case MACFG_91:
         case MACFG_92:
-                re_set_mac_ocp_bit(sc, 0xE040, (BIT_1|BIT_0));
-
-                re_set_eth_ocp_phy_bit(sc, 0xA5D0, (BIT_2 | BIT_1));
-                re_clear_eth_ocp_phy_bit(sc, 0xA6D4, (BIT_1|BIT_0));
-
-                re_clear_eth_ocp_phy_bit(sc, 0xA428, BIT_7);
-                re_clear_eth_ocp_phy_bit(sc, 0xA4A2, BIT_9);
+                re_hw_phy_enable_eee_macfg90(sc);
                 break;
 
         default:
                 ret = -EOPNOTSUPP;
-                break;
-        }
-
-        switch (sc->re_type) {
-        case MACFG_68:
-        case MACFG_69:
-        case MACFG_74:
-        case MACFG_75:
-                re_mdio_write(sc, 0x1F, 0x0A4A);
-                re_set_eth_phy_bit(sc, 0x11, BIT_9);
-                re_mdio_write(sc, 0x1F, 0x0A42);
-                re_set_eth_phy_bit(sc, 0x14, BIT_7);
-                re_mdio_write(sc, 0x1F, 0x0000);
                 break;
         }
 

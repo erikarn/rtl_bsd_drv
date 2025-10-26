@@ -160,3 +160,17 @@ re_hw_phy_disable_eee_macfg82(struct re_softc *sc)
 	re_clear_eth_ocp_phy_bit(sc, 0xA4A2, BIT_9);
 }
 
+void
+re_hw_phy_enable_eee_macfg82(struct re_softc *sc)
+{
+	re_set_mac_ocp_bit(sc, 0xE040, (BIT_1|BIT_0));
+
+	re_set_eth_ocp_phy_bit(sc, 0xA432, BIT_4);
+
+	re_set_eth_ocp_phy_bit(sc, 0xA5D0, (BIT_2 | BIT_1));
+	re_clear_eth_ocp_phy_bit(sc, 0xA6D4, BIT_0);
+
+	re_clear_eth_ocp_phy_bit(sc, 0xA6D8, BIT_4);
+	re_clear_eth_ocp_phy_bit(sc, 0xA428, BIT_7);
+	re_clear_eth_ocp_phy_bit(sc, 0xA4A2, BIT_9);
+}

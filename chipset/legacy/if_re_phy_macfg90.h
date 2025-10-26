@@ -40,5 +40,6 @@
 #ifndef	__IF_RE_PHY_MACFG90_H__
 
 extern	void re_hw_phy_disable_eee_macfg90(struct re_softc *sc);
+extern	void re_hw_phy_enable_eee_macfg90(struct re_softc *sc);
 
 #endif	/* __IF_RE_PHY_MACFG90_H__ */
