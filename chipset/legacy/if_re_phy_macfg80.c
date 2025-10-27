@@ -148,3 +148,11 @@ re_hw_phy_enable_eee_macfg80(struct re_softc *sc)
 	re_clear_eth_ocp_phy_bit(sc, 0xA428, BIT_7);
 	re_clear_eth_ocp_phy_bit(sc, 0xA4A2, BIT_9);
 }
+
+void
+re_hw_phy_disable_advanced_eee_macfg80(struct re_softc *sc)
+{
+	re_clear_mac_ocp_bit(sc, 0xE052, BIT_0);
+	re_clear_eth_ocp_phy_bit(sc, 0xA442, BIT_12 | BIT_13);
+	re_clear_eth_ocp_phy_bit(sc, 0xA430, BIT_15);
+}

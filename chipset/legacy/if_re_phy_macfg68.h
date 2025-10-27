@@ -42,5 +42,6 @@
 #ifndef	__IF_RE_PHY_MACFG68_H__
 
 extern	void re_hw_phy_disable_eee_post_macfg68(struct re_softc *);
+extern	void re_hw_phy_disable_advanced_eee_macfg68(struct re_softc *);
 
 #endif	/* __IF_RE_PHY_MACFG68_H__ */

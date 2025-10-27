@@ -8773,7 +8773,6 @@ static bool re_is_advanced_eee_enabled(struct re_softc *sc)
 
 static void _re_disable_advanced_eee(struct re_softc *sc)
 {
-        u_int16_t data;
         bool lock;
 
         if (re_is_advanced_eee_enabled(sc))
@@ -8798,26 +8797,13 @@ static void _re_disable_advanced_eee(struct re_softc *sc)
         case MACFG_71:
         case MACFG_72:
         case MACFG_73:
-                data = re_mac_ocp_read(sc, 0xE052);
-                data &= ~(BIT_0);
-                re_mac_ocp_write(sc, 0xE052, data);
+                re_hw_phy_disable_advanced_eee_macfg61(sc);
                 break;
         case MACFG_68:
         case MACFG_69:
         case MACFG_74:
         case MACFG_75:
-                data = re_mac_ocp_read(sc, 0xE052);
-                data &= ~(BIT_0);
-                re_mac_ocp_write(sc, 0xE052, data);
-
-                re_mdio_write(sc, 0x1F, 0x0A43);
-                data = re_mdio_read(sc, 0x10) & ~(BIT_15);
-                re_mdio_write(sc, 0x10, data);
-
-                re_mdio_write(sc, 0x1F, 0x0A44);
-                data = re_mdio_read(sc, 0x11) & ~(BIT_12 | BIT_13 | BIT_14);
-                re_mdio_write(sc, 0x11, data);
-                re_mdio_write(sc, 0x1f, 0x0000);
+                re_hw_phy_disable_advanced_eee_macfg68(sc);
                 break;
         case MACFG_80:
         case MACFG_81:
@@ -8830,9 +8816,7 @@ static void _re_disable_advanced_eee(struct re_softc *sc)
         case MACFG_90:
         case MACFG_91:
         case MACFG_92:
-                re_clear_mac_ocp_bit(sc, 0xE052, BIT_0);
-                re_clear_eth_ocp_phy_bit(sc, 0xA442, BIT_12 | BIT_13);
-                re_clear_eth_ocp_phy_bit(sc, 0xA430, BIT_15);
+                re_hw_phy_disable_advanced_eee_macfg80(sc);
                 break;
         }
 

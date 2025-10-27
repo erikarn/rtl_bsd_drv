@@ -41,5 +41,6 @@
 
 extern	void re_hw_phy_disable_eee_macfg80(struct re_softc *sc);
 extern	void re_hw_phy_enable_eee_macfg80(struct re_softc *sc);
+extern	void re_hw_phy_disable_advanced_eee_macfg80(struct re_softc *sc);
 
 #endif	/* __IF_RE_PHY_MACFG80_H__ */

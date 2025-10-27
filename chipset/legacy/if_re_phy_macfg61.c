@@ -172,3 +172,13 @@ re_hw_phy_config_macfg61(struct re_softc *sc, bool phy_power_saving)
 	re_mdio_write(sc, 0x1F, 0x0000);
 	re_mdio_write(sc, 0x00, 0x9200);
 }
+
+void
+re_hw_phy_disable_advanced_eee_macfg61(struct re_softc *sc)
+{
+	uint16_t data;
+
+	data = re_mac_ocp_read(sc, 0xE052);
+	data &= ~(BIT_0);
+	re_mac_ocp_write(sc, 0xE052, data);
+}

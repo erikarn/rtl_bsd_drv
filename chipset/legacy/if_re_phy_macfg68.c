@@ -128,3 +128,22 @@ re_hw_phy_disable_eee_post_macfg68(struct re_softc *sc)
 	re_clear_eth_phy_bit(sc, 0x11, BIT_9);
 	re_mdio_write(sc, 0x1F, 0x0000);
 }
+
+void
+re_hw_phy_disable_advanced_eee_macfg68(struct re_softc *sc)
+{
+	uint16_t data;
+
+	data = re_mac_ocp_read(sc, 0xE052);
+	data &= ~(BIT_0);
+	re_mac_ocp_write(sc, 0xE052, data);
+
+	re_mdio_write(sc, 0x1F, 0x0A43);
+	data = re_mdio_read(sc, 0x10) & ~(BIT_15);
+	re_mdio_write(sc, 0x10, data);
+
+	re_mdio_write(sc, 0x1F, 0x0A44);
+	data = re_mdio_read(sc, 0x11) & ~(BIT_12 | BIT_13 | BIT_14);
+	re_mdio_write(sc, 0x11, data);
+	re_mdio_write(sc, 0x1f, 0x0000);
+}
