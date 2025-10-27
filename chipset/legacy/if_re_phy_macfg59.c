@@ -210,3 +210,17 @@ re_hw_phy_config_macfg59(struct re_softc *sc, bool phy_power_saving)
 	re_mdio_write(sc, 0x1F, 0x0000);
 	re_mdio_write(sc, 0x00, 0x9200);
 }
+
+void
+re_hw_phy_disable_advanced_eee_macfg59(struct re_softc *sc)
+{
+	uint16_t data;
+
+	re_eri_write(sc, 0x1EA, 1, 0x00, ERIAR_ExGMAC);
+
+	re_mdio_write(sc, 0x1F, 0x0A42);
+	data = re_mdio_read(sc, 0x16);
+	data &= ~(BIT_1);
+	re_mdio_write(sc, 0x16, data);
+	re_mdio_write(sc, 0x1F, 0x0000);
+}

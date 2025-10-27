@@ -8786,24 +8786,10 @@ static void _re_disable_advanced_eee(struct re_softc *sc)
 
         switch (sc->re_type) {
         case MACFG_59:
-                re_eri_write(sc, 0x1EA, 1, 0x00, ERIAR_ExGMAC);
-
-                re_mdio_write(sc, 0x1F, 0x0A42);
-                data = re_mdio_read(sc, 0x16);
-                data &= ~(BIT_1);
-                re_mdio_write(sc, 0x16, data);
-                re_mdio_write(sc, 0x1F, 0x0000);
+                re_hw_phy_disable_advanced_eee_macfg59(sc);
                 break;
         case MACFG_60:
-                data = re_mac_ocp_read(sc, 0xE052);
-                data &= ~(BIT_0);
-                re_mac_ocp_write(sc, 0xE052, data);
-
-                re_mdio_write(sc, 0x1F, 0x0A42);
-                data = re_mdio_read(sc, 0x16);
-                data &= ~(BIT_1);
-                re_mdio_write(sc, 0x16, data);
-                re_mdio_write(sc, 0x1F, 0x0000);
+                re_hw_phy_disable_advanced_eee_macfg60(sc);
                 break;
         case MACFG_61:
         case MACFG_62:
