@@ -1638,7 +1638,7 @@ static void re_rar_set(struct re_softc *sc, u_int8_t *eaddr)
         CSR_WRITE_4(sc, RE_IDR0,
                     htole32(*(u_int32_t *)(&eaddr[0])));
         CSR_WRITE_2(sc, RE_IDR4,
-                    htole16(*(u_int32_t *)(&eaddr[4])));
+                    htole16(*(u_int16_t *)(&eaddr[4])));
 
         switch (sc->re_type) {
         case MACFG_36:
